@@ -1,0 +1,188 @@
+# 解法一
+
+## 思路和算法
+
+由于词链满足单词顺序单调递增，因此可以首先将数组 $\textit{words}$ 按单词长度升序排序，然后计算最长词链的长度。以下描述中，数组 $\textit{words}$ 为按单词长度升序排序后的数组。
+
+用 $n$ 表示数组 $\textit{words}$ 的长度。为了计算最长词链的长度，对于每个 $0 \le i < n$ 需要计算以 $\textit{words}[i]$ 结尾的最长词链的长度，然后在这 $n$ 个最长词链的长度中寻找整个数组的最长词链的长度，即可得到答案。
+
+当 $i > 0$ 时，如果存在下标 $j$ 满足 $0 \le j < i$ 且 $\textit{words}[j]$ 是 $\textit{words}[i]$ 的前身，则可以将 $\textit{words}[i]$ 添加到以 $\textit{words}[j]$ 结尾的词链的后面，得到新的词链。因此可以使用动态规划计算以每个下标结尾的最长词链的长度。
+
+创建长度为 $n$ 的数组 $\textit{dp}$，其中 $\textit{dp}[i]$ 表示以下标 $i$ 结尾的最长递增子序列长度。由于以任意一个下标结尾的最长词链的长度都大于等于 $1$，因此将 $\textit{dp}$ 中的所有值初始化为 $1$。
+
+当 $i = 0$ 时，以下标 $i$ 结尾的词链只有一个，长度为 $1$，因此动态规划的边界情况是 $\textit{dp}[0] = 1$。
+
+当 $i > 0$ 时，对于满足 $0 \le j < i$ 且 $\textit{words}[j]$ 是 $\textit{words}[i]$ 的前身的任意下标 $j$，$\textit{dp}[i] \ge \textit{dp}[j] + 1$，为了使 $\textit{dp}[i]$ 最大化，应寻找符合要求的最大的 $\textit{dp}[j]$，此时 $\textit{dp}[i] = \max\{\textit{dp}[j]\} + 1$。因此动态规划的状态转移方程是：对于所有满足 $0 \le j < i$ 且 $\textit{words}[j]$ 是 $\textit{words}[i]$ 的前身的下标 $j$，$\textit{dp}[i] = \max \{\textit{dp}[j]\} + 1$。
+
+由于每一项依赖于之前的项，因此应从小到大遍历每个 $i$ 并计算 $\textit{dp}[i]$。计算得到 $\textit{dp}$ 中的所有状态值之后，其中的最大值即为最长词链的长度。
+
+实现方面，判断 $\textit{word}_1$ 是否为 $\textit{word}_2$ 的前身，等价于判断下面两个条件是否同时成立。
+
+1. 字符串 $\textit{word}_2$ 与 $\textit{word}_1$ 的长度之差等于 $1$。
+
+2. 字符串 $\textit{word}_1$ 是 $\textit{word}_2$ 的子序列。
+
+## 代码
+
+* [sol1-Java]
+
+```Java
+class Solution {
+    public int longestStrChain(String[] words) {
+        int maxLength = 1;
+        Arrays.sort(words, (a, b) -> a.length() - b.length());
+        int n = words.length;
+        int[] dp = new int[n];
+        Arrays.fill(dp, 1);
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                if (isPredecessor(words[j], words[i])) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
+            maxLength = Math.max(maxLength, dp[i]);
+        }
+        return maxLength;
+    }
+
+    public boolean isPredecessor(String word1, String word2) {
+        if (word2.length() - word1.length() != 1) {
+            return false;
+        }
+        int length = word1.length();
+        int index1 = 0, index2 = 0;
+        while (index1 < length && index2 - index1 <= 1) {
+            if (word1.charAt(index1) == word2.charAt(index2)) {
+                index1++;
+            }
+            index2++;
+        }
+        return index2 - index1 <= 1;
+    }
+}
+```
+
+* [sol1-C#]
+
+```C#
+public class Solution {
+    public int LongestStrChain(string[] words) {
+        int maxLength = 1;
+        Array.Sort(words, (a, b) => a.Length - b.Length);
+        int n = words.Length;
+        int[] dp = new int[n];
+        Array.Fill(dp, 1);
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                if (IsPredecessor(words[j], words[i])) {
+                    dp[i] = Math.Max(dp[i], dp[j] + 1);
+                }
+            }
+            maxLength = Math.Max(maxLength, dp[i]);
+        }
+        return maxLength;
+    }
+
+    public bool IsPredecessor(string word1, string word2) {
+        if (word2.Length - word1.Length != 1) {
+            return false;
+        }
+        int length = word1.Length;
+        int index1 = 0, index2 = 0;
+        while (index1 < length && index2 - index1 <= 1) {
+            if (word1[index1] == word2[index2]) {
+                index1++;
+            }
+            index2++;
+        }
+        return index2 - index1 <= 1;
+    }
+}
+```
+
+## 复杂度分析
+
+- 时间复杂度：$O(n^2L)$，其中 $n$ 是数组 $\textit{words}$ 的长度，$L$ 是数组 $\textit{words}$ 中的字符串的最大长度。将数组 $\textit{words}$ 排序的时间是 $O(n \log n)$，动态规划的状态数是 $O(n)$，每个状态的计算时间是 $O(nL)$，因此时间复杂度是 $O(n^2L)$。
+
+- 空间复杂度：$O(n)$，其中 $n$ 是数组 $\textit{words}$ 的长度。由于数组 $\textit{words}$ 中的元素是字符串，因此排序的空间是 $O(n)$，需要创建长度为 $n$ 的数组 $\textit{dp}$。
+
+# 解法二
+
+## 思路和算法
+
+动态规划的另一种实现方法为不创建状态数组 $\textit{dp}$，而是使用哈希表记录以每个单词结尾的最长词链的长度。
+
+首先将数组 $\textit{words}$ 按单词长度升序排序，然后遍历排序后的数组 $\textit{words}$ 计算最长词链的长度。
+
+对于遍历到的每个单词 $\textit{word}$，将其长度记为 $\textit{wordLength}$，则删除单词 $\textit{word}$ 的任意一个字母之后都可以得到单词 $\textit{word}$ 的一个前身，因此单词 $\textit{word}$ 有 $\textit{wordLength}$ 个前身，分别计算以每个前身结尾的最长词链的长度之后，即可得到以单词 $\textit{word}$ 结尾的最长词链的长度。具体做法如下。
+
+1. 对于单词 $\textit{word}$ 的每个前身 $\textit{predecessor}$，在哈希表中得到以 $\textit{predecessor}$ 结尾的最长词链的长度，如果哈希表中不存在 $\textit{predecessor}$ 则以 $\textit{predecessor}$ 结尾的最长词链的长度是 $0$，使用以 $\textit{predecessor}$ 结尾的最长词链的长度加 $1$ 更新以单词 $\textit{word}$ 结尾的最长词链的长度。
+
+2. 使用 $\textit{chainLength}$ 表示以单词 $\textit{word}$ 结尾的最长词链的长度，在哈希表中存入 $\textit{word}$ 和 $\textit{chainLength}$。
+
+3. 使用 $\textit{chainLength}$ 更新答案。
+
+遍历结束之后，即可得到最长词链的长度。
+
+实现方面，由于以相同内容的单词结尾的最长词链的长度一定相同，因此当数组 $\textit{words}$ 中有重复单词时应避免重复计算，如果遍历到的单词已经在哈希表中则可以跳过该单词。
+
+## 代码
+
+* [sol2-Java]
+
+```Java
+class Solution {
+    public int longestStrChain(String[] words) {
+        int maxLength = 1;
+        Map<String, Integer> chainLengths = new HashMap<String, Integer>();
+        Arrays.sort(words, (a, b) -> a.length() - b.length());
+        for (String word : words) {
+            if (chainLengths.containsKey(word)) {
+                continue;
+            }
+            int chainLength = 1;
+            int wordLength = word.length();
+            for (int i = 0; i < wordLength; i++) {
+                String predecessor = word.substring(0, i) + word.substring(i + 1);
+                chainLength = Math.max(chainLength, chainLengths.getOrDefault(predecessor, 0) + 1);
+            }
+            chainLengths.put(word, chainLength);
+            maxLength = Math.max(maxLength, chainLength);
+        }
+        return maxLength;
+    }
+}
+```
+
+* [sol2-C#]
+
+```C#
+public class Solution {
+    public int LongestStrChain(string[] words) {
+        int maxLength = 1;
+        IDictionary<string, int> chainLengths = new Dictionary<string, int>();
+        Array.Sort(words, (a, b) => a.Length - b.Length);
+        foreach (string word in words) {
+            if (chainLengths.ContainsKey(word)) {
+                continue;
+            }
+            int chainLength = 1;
+            int wordLength = word.Length;
+            for (int i = 0; i < wordLength; i++) {
+                string predecessor = word.Substring(0, i) + word.Substring(i + 1);
+                chainLength = Math.Max(chainLength, (chainLengths.ContainsKey(predecessor) ? chainLengths[predecessor] : 0) + 1);
+            }
+            chainLengths.Add(word, chainLength);
+            maxLength = Math.Max(maxLength, chainLength);
+        }
+        return maxLength;
+    }
+}
+```
+
+## 复杂度分析
+
+- 时间复杂度：$O(nL^2)$，其中 $n$ 是数组 $\textit{words}$ 的长度，$L$ 是数组 $\textit{words}$ 中的字符串的最大长度。将数组 $\textit{words}$ 排序的时间是 $O(n \log n)$，排序之后需要遍历数组 $\textit{words}$ 一次，对于每个单词遍历所有前身并计算最长词链长度的时间是 $O(L^2)$，因此时间复杂度是 $O(n \log n + nL^2)$。
+
+- 空间复杂度：$O(nL)$，其中 $n$ 是数组 $\textit{words}$ 的长度，$L$ 是数组 $\textit{words}$ 中的字符串的最大长度。由于数组 $\textit{words}$ 中的元素是字符串，因此排序的空间是 $O(n)$，哈希表中最多存储 $n$ 个单词，每个单词的空间是 $O(L)$，因此空间复杂度是 $O(nL)$。
+

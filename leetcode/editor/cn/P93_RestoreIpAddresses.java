@@ -46,6 +46,7 @@
 package leetcode.editor.cn;
 
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -64,45 +65,38 @@ public class P93_RestoreIpAddresses {
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
         List<String> res = new ArrayList<>();
-        LinkedList<String> track = new LinkedList<>();
-
+        List<String> track = new ArrayList<>();
         public List<String> restoreIpAddresses(String s) {
-            if (s.length() > 12) return res;
+            if (s.length() > 12 || s.length() < 4) return res;
             backtrack(s, 0);
             return res;
         }
-
         public void backtrack(String s, int index) {
-            if (index >= s.length() && track.size() == 4) {
-                addToRes();
+            if (index == s.length() && track.size() == 4) {
+                StringBuilder item = new StringBuilder();
+                for (int i = 0; i < 4; i++) {
+                    item.append(track.get(i)).append('.');
+                }
+                item.deleteCharAt(item.length() - 1);
+                res.add(item.toString());
                 return;
             }
-            for (int i = index; i < s.length(); i++) {
-                if (check(s, index, i)) {
-                    track.add(s.substring(index, i + 1));
+            for (int i = index; i < index + 3; ++i) {
+                if (i > s.length() - 1) return;
+                String str = s.substring(index, i + 1);
+                if (check(str)) {
+                    track.add(str);
                     backtrack(s, i + 1);
-                    track.removeLast();
+                    track.remove(track.size() - 1);
                 }
             }
         }
-
-        public void addToRes() {
-            StringBuilder item = new StringBuilder();
-            for (String value : track) {
-                item.append(value).append(".");
-            }
-            item.deleteCharAt(item.length() - 1);
-            res.add(item.toString());
+        public boolean check(String str) {
+            if (str.equals("0")) return true;
+            return !(str.length() > 3 || str.startsWith("0") || Integer.parseInt(str) > 255);
         }
 
-        public boolean check(String s, int left, int right) {
-            int len = right - left + 1;
-            if (len == 1) return true;
-            if (s.charAt(left) == '0') return false;
-            if (len == 2) return true;
-            if (len > 3) return false;
-            return Integer.parseInt(s.substring(left, right + 1)) <= 255;
-        }
+
     }
 //leetcode submit region end(Prohibit modification and deletion)
 

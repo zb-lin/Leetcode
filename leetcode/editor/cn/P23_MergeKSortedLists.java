@@ -76,27 +76,54 @@ public class P23_MergeKSortedLists {
      * }
      */
     class Solution {
+//        public ListNode mergeKLists(ListNode[] lists) {
+//            if (lists.length == 0) return null;
+//            ListNode dummy = new ListNode(-1);
+//            ListNode p = dummy;
+//            PriorityQueue<ListNode> pq
+//                    = new PriorityQueue<>(lists.length, Comparator.comparingInt(a -> a.val));
+//            for (ListNode node : lists) {
+//                if (node != null) {
+//                    pq.add(node);
+//                }
+//            }
+//            while (!pq.isEmpty()) {
+//                ListNode node = pq.poll();
+//                p.next = node;
+//                p = p.next;
+//                if (node.next != null) {
+//                    pq.add(node.next);
+//                }
+//            }
+//            return dummy.next;
+//        }
         public ListNode mergeKLists(ListNode[] lists) {
-            if (lists.length == 0) return null;
-            ListNode dummy = new ListNode(-1);
-            ListNode p = dummy;
-            PriorityQueue<ListNode> pq
-                    = new PriorityQueue<>(lists.length, Comparator.comparingInt(a -> a.val));
-            for (ListNode node : lists) {
-                if (node != null) {
-                    pq.add(node);
+            return merge(lists, 0, lists.length - 1);
+        }
+        public ListNode merge(ListNode[] lists, int l, int r) {
+            if (l == r) return lists[l];
+            if (l > r) return null;
+            int mid = l + (r - l) / 2;
+            return merge2Lists(merge(lists, l, mid), merge(lists, mid + 1, r));
+        }
+        public ListNode merge2Lists(ListNode p, ListNode q) {
+            if (p == null || q == null) return p == null ? q : p;
+            ListNode dummy = new ListNode(0);
+            ListNode pre = dummy;
+            while (p != null && q != null) {
+                if (p.val < q.val) {
+                    pre.next = p;
+                    p = p.next;
+                } else {
+                    pre.next = q;
+                    q = q.next;
                 }
+                pre = pre.next;
             }
-            while (!pq.isEmpty()) {
-                ListNode node = pq.poll();
-                p.next = node;
-                p = p.next;
-                if (node.next != null) {
-                    pq.add(node.next);
-                }
-            }
+            pre.next = p != null ? p : q;
             return dummy.next;
         }
+
     }
 //leetcode submit region end(Prohibit modification and deletion)
 

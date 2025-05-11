@@ -75,19 +75,18 @@ public class P102_BinaryTreeLevelOrderTraversal {
         public List<List<Integer>> levelOrder(TreeNode root) {
             List<List<Integer>> res = new ArrayList<>();
             if (root == null) return res;
-            Deque<TreeNode> queue = new LinkedList<>();
-            queue.offer(root);
-            while (!queue.isEmpty()) {
-                int len = queue.size();
-                List<Integer> tmpList = new ArrayList<>();
-                while (len > 0) {
-                    TreeNode node = queue.poll();
-                    tmpList.add(node.val);
-                    if (node.left != null) queue.offer(node.left);
-                    if (node.right != null) queue.offer(node.right);
-                    len--;
+            Deque<TreeNode> deque = new LinkedList<>();
+            deque.offer(root);
+            while (!deque.isEmpty()) {
+                int len = deque.size();
+                List<Integer> itemList = new ArrayList<>();
+                for (int i = 0; i < len; i++) {
+                    TreeNode node = deque.poll();
+                    itemList.add(node.val);
+                    if (node.left != null) deque.offer(node.left);
+                    if (node.right != null) deque.offer(node.right);
                 }
-                res.add(tmpList);
+                res.add(itemList);
             }
             return res;
         }

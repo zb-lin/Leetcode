@@ -77,87 +77,93 @@ public class P146_LruCache {
 
     //leetcode submit region begin(Prohibit modification and deletion)
     class LRUCache {
-        class Node {
+        // 双向链表节点类
+        class DLinkedNode {
             int key;
             int value;
-            Node prev;
-            Node next;
+            DLinkedNode prev;
+            DLinkedNode next;
 
-            public Node(int key, int value) {
+            DLinkedNode() {}  // 用于创建哑节点
+            DLinkedNode(int key, int value) {
                 this.key = key;
                 this.value = value;
             }
-
-            public Node() {
-            }
         }
 
-        Node head;
-        Node tail;
-        int size;
-        int capacity;
-        Map<Integer, Node> cache;
+        private final Map<Integer, DLinkedNode> cache = new HashMap<>();
+        private final int capacity;
+        private int size;
+        private final DLinkedNode head;  // 虚拟头节点
+        private final DLinkedNode tail;  // 虚拟尾节点
 
         public LRUCache(int capacity) {
-            head = new Node();
-            tail = new Node();
+            this.capacity = capacity;
+            this.size = 0;
+            // 初始化双向链表
+            head = new DLinkedNode();
+            tail = new DLinkedNode();
             head.next = tail;
             tail.prev = head;
-            size = 0;
-            this.capacity = capacity;
-            cache = new HashMap<>();
         }
 
         public int get(int key) {
-            Node node = cache.get(key);
+            DLinkedNode node = cache.get(key);
             if (node == null) {
-                return -1;
-            } else {
-                moveToHead(node);
-                return node.value;
+                return -1;  // 未找到
             }
-        }
-
-        public void moveToHead(Node node) {
-            removeNode(node);
-            addToHead(node);
-        }
-
-        private void addToHead(Node node) {
-            node.next = head.next;
-            node.prev = head;
-            head.next.prev = node;
-            head.next = node;
-        }
-
-        private void removeNode(Node node) {
-            node.prev.next = node.next;
-            node.next.prev = node.prev;
+            // 将访问的节点移到链表头部
+            moveToHead(node);
+            return node.value;
         }
 
         public void put(int key, int value) {
-            Node node = cache.get(key);
+            DLinkedNode node = cache.get(key);
             if (node == null) {
-                node = new Node(key, value);
-                cache.put(key, node);
-                addToHead(node);
+                // 如果key不存在，创建新节点
+                DLinkedNode newNode = new DLinkedNode(key, value);
+                cache.put(key, newNode);
+                addToHead(newNode);
                 size++;
+
                 if (size > capacity) {
-                    Node last = removeTail();
-                    cache.remove(last.key);
+                    // 如果超出容量，移除尾部节点
+                    DLinkedNode tailNode = removeTail();
+                    cache.remove(tailNode.key);
                     size--;
                 }
             } else {
+                // 如果key存在，更新值并移到头部
                 node.value = value;
                 moveToHead(node);
             }
         }
 
-        private Node removeTail() {
-            Node last = tail.prev;
-            tail.prev.prev.next = tail;
-            tail.prev = tail.prev.prev;
-            return last;
+        // 将节点添加到链表头部
+        private void addToHead(DLinkedNode node) {
+            node.prev = head;
+            node.next = head.next;
+            head.next.prev = node;
+            head.next = node;
+        }
+
+        // 移除节点
+        private void removeNode(DLinkedNode node) {
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
+        }
+
+        // 将节点移到链表头部
+        private void moveToHead(DLinkedNode node) {
+            removeNode(node);
+            addToHead(node);
+        }
+
+        // 移除链表尾部节点
+        private DLinkedNode removeTail() {
+            DLinkedNode tailNode = tail.prev;
+            removeNode(tailNode);
+            return tailNode;
         }
     }
 

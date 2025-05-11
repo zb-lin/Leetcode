@@ -74,30 +74,44 @@ public class P25_ReverseNodesInKGroup {
      * }
      */
     class Solution {
+        /**
+         * K个一组翻转链表
+         * @param head 链表头节点
+         * @param k 每组节点数
+         * @return 翻转后的链表头节点
+         */
         public ListNode reverseKGroup(ListNode head, int k) {
             ListNode dummy = new ListNode(-1, head);
             ListNode prev = dummy;
             ListNode tail = dummy;
             while (head != null) {
-                for (int i = 0; i < k; i++) {
-                    tail = tail.next;
-                    if (tail == null) return dummy.next;
+                for (int i = 0; i < k; ++i) {
+                    if (tail.next != null) {
+                        tail = tail.next;
+                    } else {
+                        return dummy.next;
+                    }
                 }
                 ListNode next = tail.next;
-                ListNode[] listNodes = reverse(head, tail);
-                head = listNodes[0];
-                tail = listNodes[1];
-                tail.next = next;
+                ListNode[] result = reverse(head, tail);
+                head = result[0];
+                tail = result[1];
                 prev.next = head;
+                tail.next = next;
                 head = next;
                 prev = tail;
             }
             return dummy.next;
         }
 
+        /**
+         * 翻转从head到tail的链表段
+         * @param head 要翻转的链表段的头节点
+         * @param tail 要翻转的链表段的尾节点
+         * @return 翻转后的头和尾节点数组
+         */
         public ListNode[] reverse(ListNode head, ListNode tail) {
-            ListNode prev = tail.next;
-            ListNode curr = head;
+            ListNode prev = tail.next, curr = head;
             while (prev != tail) {
                 ListNode next = curr.next;
                 curr.next = prev;
@@ -106,30 +120,6 @@ public class P25_ReverseNodesInKGroup {
             }
             return new ListNode[]{tail, head};
         }
-
-
-        /*public ListNode reverseKGroup(ListNode head, int k) {
-            Deque<ListNode> deque = new LinkedList<>();
-            ListNode p = head;
-            ListNode dummy = new ListNode(-1);
-            ListNode q = dummy;
-            while (p != null) {
-                deque.addFirst(p);
-                p = p.next;
-                if (deque.size() == k) {
-                    while (!deque.isEmpty()) {
-                        q.next = deque.removeFirst();
-                        q = q.next;
-                    }
-                }
-            }
-            while (!deque.isEmpty()) {
-                q.next = deque.removeLast();
-                q = q.next;
-            }
-            q.next = null;
-            return dummy.next;
-        }*/
     }
 //leetcode submit region end(Prohibit modification and deletion)
 

@@ -73,24 +73,28 @@ public class P143_ReorderList {
     class Solution {
         public void reorderList(ListNode head) {
             if (head == null) return;
+
+            // 1. 将链表节点存入双端队列
             Deque<ListNode> deque = new LinkedList<>();
-            ListNode p = head;
-            while (p != null) {
-                deque.add(p);
-                p = p.next;
+            ListNode curr = head;
+            while (curr != null) {
+                deque.addLast(curr);
+                curr = curr.next;
             }
-            ListNode dummy = new ListNode(-1);
-            p = dummy;
+
+            // 2. 交替从首尾取出节点重建链表
+            ListNode dummy = new ListNode(-1); // 虚拟头节点
+            ListNode tail = dummy;
+            boolean fromFront = true; // 标记当前取首还是取尾
+
             while (!deque.isEmpty()) {
-                p.next = deque.removeFirst();
-                p = p.next;
-                p.next = null;
-                if (!deque.isEmpty()) {
-                    p.next = deque.removeLast();
-                    p = p.next;
-                    p.next = null;
-                }
+                ListNode node = fromFront ? deque.removeFirst() : deque.removeLast();
+                tail.next = node;
+                tail = tail.next;
+                fromFront = !fromFront; // 切换取首尾
             }
+            tail.next = null; // 断开最后的环
+
             head = dummy.next;
         }
     }

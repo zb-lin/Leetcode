@@ -53,11 +53,13 @@ public class P121_BestTimeToBuyAndSellStock {
     class Solution {
         public int maxProfit(int[] prices) {
             int n = prices.length;
+            // 未持有
             int dp0 = 0;
+            // 持有
             int dp1 = -prices[0];
             for (int i = 1; i < n; ++i) {
                 dp0 = Math.max(dp0, dp1 + prices[i]);
-                dp1 = Math.max(dp1, -prices[i]);
+                dp1 = Math.max(-prices[i], dp1);
             }
             return dp0;
         }

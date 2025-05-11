@@ -49,36 +49,74 @@ public class P215_KthLargestElementInAnArray {
 
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
+        /**
+         * 查找数组中第k大的元素
+         * @param nums 输入数组
+         * @param k 第k大的位置
+         * @return 第k大的元素值
+         */
         public int findKthLargest(int[] nums, int k) {
-            return quickSort(nums, 0, nums.length - 1, nums.length - k);
+            // 将问题转换为查找第(nums.length - k)小的元素
+            // 例如：第2大的元素就是第(nums.length - 2)小的元素
+            return quickSelect(nums, 0, nums.length - 1, nums.length - k);
         }
 
-        public int quickSort(int[] nums, int left, int right, int k) {
-            if (left == right) return nums[k];
-            int partition = nums[left], less = left - 1, more = right + 1;
-            while (less < more) {
-                do {
-                    less++;
-                } while (nums[less] < partition);
-                do {
-                    more--;
-                } while (nums[more] > partition);
-                if (less < more) {
-                    swap(nums, less, more);
+        /**
+         * 快速选择算法实现
+         * @param nums 输入数组
+         * @param left 当前处理区间的左边界
+         * @param right 当前处理区间的右边界
+         * @param k 要查找的第k小的元素位置
+         * @return 第k小的元素值
+         */
+        private int quickSelect(int[] nums, int left, int right, int k) {
+            // 当区间只有一个元素时，直接返回
+            if (left == right) return nums[left];
+
+            // 随机选择基准值(pivot)的位置，避免最坏情况
+            int pivotIndex = left + (int) (Math.random() * (right - left + 1));
+            int pivot = nums[pivotIndex];
+
+            // 将基准值交换到区间最左边
+            swap(nums, left, pivotIndex);
+
+            // i指向最后一个小于基准值的位置
+            int i = left;
+
+            // 分区操作：将所有小于基准值的元素移到左边
+            for (int j = left + 1; j <= right; ++j) {
+                if (pivot > nums[j]) {
+                    ++i;
+                    swap(nums, i, j);
                 }
             }
-            if (k <= more) {
-                return quickSort(nums, left, more, k);
+
+            // 将基准值放到正确的位置i
+            swap(nums, left, i);
+
+            // 判断基准值位置与k的关系
+            if (k == i) {
+                // 基准值正好是第k小的元素
+                return nums[i];
+            } else if (k < i) {
+                // 第k小的元素在左半部分
+                return quickSelect(nums, left, i - 1, k);
             } else {
-                return quickSort(nums, more + 1, right, k);
+                // 第k小的元素在右半部分
+                return quickSelect(nums, i + 1, right, k);
             }
         }
 
-        public void swap(int[] nums, int i, int j) {
-            if (i == j) return;
-            nums[i] = nums[i] ^ nums[j];
-            nums[j] = nums[i] ^ nums[j];
-            nums[i] = nums[i] ^ nums[j];
+        /**
+         * 交换数组中两个元素的位置
+         * @param nums 输入数组
+         * @param i 第一个元素的索引
+         * @param j 第二个元素的索引
+         */
+        private void swap(int[] nums, int i, int j) {
+            int temp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = temp;
         }
     }
 //leetcode submit region end(Prohibit modification and deletion)

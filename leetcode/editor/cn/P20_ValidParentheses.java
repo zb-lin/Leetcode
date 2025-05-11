@@ -63,20 +63,23 @@ public class P20_ValidParentheses {
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
         public boolean isValid(String s) {
-            Deque<Character> deque = new LinkedList<>();
-            for (char ch : s.toCharArray()) {
-                if (ch == '(' || ch == '[' || ch == '{') {
-                    deque.push(ch);
+            Deque<Character> record = new LinkedList<>();
+            for (int i = 0; i < s.length(); i++) {
+                char ch = s.charAt(i);
+                if (record.isEmpty() || isLeft(ch)) {
+                    record.addFirst(ch);
+                } else if (record.getFirst() == reverse(ch)) {
+                    record.removeFirst();
                 } else {
-                    if (deque.isEmpty() || deque.pop() != reverse(ch)) {
-                        return false;
-                    }
+                    return false;
                 }
             }
-            return deque.isEmpty();
+            return record.isEmpty();
         }
-
-        public Character reverse(Character ch) {
+        public boolean isLeft(char ch) {
+            return ch == '(' || ch == '[' || ch == '{';
+        }
+        public char reverse(char ch) {
             if (ch == ')') return '(';
             if (ch == ']') return '[';
             return '{';

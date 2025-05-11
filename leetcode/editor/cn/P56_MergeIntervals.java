@@ -33,10 +33,7 @@
 
 package leetcode.editor.cn;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Deque;
-import java.util.LinkedList;
+import java.util.*;
 
 /**
  * 合并区间
@@ -55,41 +52,30 @@ public class P56_MergeIntervals {
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
         public int[][] merge(int[][] intervals) {
-            Arrays.sort(intervals, Comparator.comparingInt(a -> a[0]));
-            Deque<int[]> deque = new LinkedList<>();
-            deque.addFirst(intervals[0]);
-            for (int i = 1; i < intervals.length; ++i) {
-                int[] lastNode = deque.getFirst();
-                if (lastNode[1] < intervals[i][0]) {
-                    deque.addFirst(intervals[i]);
+            Arrays.sort(intervals, (a, b) -> {
+                return a[0] - b[0];
+            });
+            Deque<int[]> resList = new LinkedList<>();
+            for (int i = 0; i < intervals.length; ++i) {
+                int[] curr = intervals[i];
+                if (resList.isEmpty()) {
+                    resList.addLast(curr);
+                    continue;
+                }
+                int[] pre = resList.getLast();
+                if (pre[1] > curr[1]) continue;
+                if (pre[1] < curr[0]) {
+                    resList.addLast(curr);
                 } else {
-                    if (intervals[i][1] > lastNode[1]) {
-                        lastNode[1] = intervals[i][1];
-                    }
+                    resList.removeLast();
+                    resList.addLast(new int[]{pre[0], curr[1]});
                 }
             }
-            int[][] result = new int[deque.size()][2];
-            int size = deque.size();
-            for (int i = 0; i < size; ++i) {
-                result[i] = deque.removeLast();
+            int[][] res = new int[resList.size()][2];
+            for (int i = 0; i < res.length; i++) {
+                res[i] = resList.removeFirst();
             }
-            return result;
-//            Arrays.sort(intervals, Comparator.comparingInt(interval -> interval[0]));
-//            Deque<int[]> deque = new LinkedList<>();
-//            deque.add(intervals[0]);
-//            for (int i = 1; i < intervals.length; i++) {
-//                int[] last = deque.peekLast();
-//                int[] curr = intervals[i];
-//                if (last[1] >= curr[1]) {
-//                    continue;
-//                }
-//                if (last[1] < curr[0]) {
-//                    deque.addLast(curr);
-//                } else {
-//                    last[1] = curr[1];
-//                }
-//            }
-//            return deque.toArray(new int[deque.size()][]);
+            return res;
         }
     }
 //leetcode submit region end(Prohibit modification and deletion)

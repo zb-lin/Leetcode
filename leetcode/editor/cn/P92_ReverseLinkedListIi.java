@@ -37,6 +37,8 @@
 
 package leetcode.editor.cn;
 
+import java.util.List;
+
 /**
  * 反转链表 II
  *
@@ -62,26 +64,22 @@ public class P92_ReverseLinkedListIi {
      * }
      */
     class Solution {
-        ListNode successor = null;
-
-        public ListNode reverseN(ListNode head, int n) {
-            if (n == 1) {
-                successor = head.next;
-                return head;
-            }
-            ListNode last = reverseN(head.next, n - 1);
-            head.next.next = head;
-            head.next = successor;
-            return last;
-        }
-
         public ListNode reverseBetween(ListNode head, int left, int right) {
-            if (left == 1) {
-                return reverseN(head, right);
+            ListNode dummy = new ListNode(0, head);
+            ListNode pre = dummy;
+            for (int i = 1; i < left; ++i) {
+                pre = pre.next;
             }
-            head.next = reverseBetween(head.next, left - 1, right - 1);
-            return head;
+            ListNode curr = pre.next;
+            for (int i = left; i < right; ++i) {
+                ListNode next = curr.next;
+                curr.next = next.next;
+                next.next = pre.next;
+                pre.next = next;
+            }
+            return dummy.next;
         }
+
     }
 //leetcode submit region end(Prohibit modification and deletion)
 

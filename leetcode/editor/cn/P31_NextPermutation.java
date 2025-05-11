@@ -70,49 +70,21 @@ public class P31_NextPermutation {
 
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
-
         public void nextPermutation(int[] nums) {
-            int n = nums.length;
-            int i = n - 2;
+            // 从右往左找到第一个不是上升的位置
+            int i = nums.length - 2;
             while (i >= 0 && nums[i] >= nums[i + 1]) {
                 i--;
             }
+            // 如果找到, 从右往左寻找第一个大于等于 nums[i]的值
             if (i >= 0) {
-                int j = n - 1;
+                int j = nums.length - 1;
                 while (j >= 0 && nums[i] >= nums[j]) {
                     j--;
                 }
                 swap(nums, i, j);
             }
-            reverse(nums, i + 1, n - 1);
-        }
-
-
-
-        /*public void nextPermutation(int[] nums) {
-            int n = nums.length;
-            int i = n - 2;
-            // 寻找从右往左第一个比前一个小的   {1, 2, 3} 中 2
-            while (i >= 0 && nums[i] >= nums[i + 1]) {
-                i--;
-            }
-            if (i >= 0) {
-                int j = n - 1;
-                // 寻找从右往左第一个比nums[i]大的
-                while (j >= 0 && nums[i] >= nums[j]) {
-                    j--;
-                }
-                swap(nums, i, j);
-            }
-            reverse(nums, i + 1, n - 1);
-        }*/
-
-        public void reverse(int[] nums, int left, int right) {
-            while (left < right) {
-                swap(nums, left, right);
-                left++;
-                right--;
-            }
+            reverse(nums, i + 1);
         }
 
         public void swap(int[] nums, int i, int j) {
@@ -120,6 +92,16 @@ public class P31_NextPermutation {
             nums[i] = nums[j];
             nums[j] = temp;
         }
+
+        public void reverse(int[] nums, int start) {
+            int left = start, right = nums.length - 1;
+            while (left < right) {
+                swap(nums, left, right);
+                left++;
+                right--;
+            }
+        }
+
     }
 //leetcode submit region end(Prohibit modification and deletion)
 

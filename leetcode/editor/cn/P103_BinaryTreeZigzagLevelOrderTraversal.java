@@ -1,42 +1,43 @@
-//给你二叉树的根节点 root ，返回其节点值的 锯齿形层序遍历 。（即先从左往右，再从右往左进行下一层遍历，以此类推，层与层之间交替进行）。 
+//给你二叉树的根节点 root ，返回其节点值的 锯齿形层序遍历 。（即先从左往右，再从右往左进行下一层遍历，以此类推，层与层之间交替进行）。
 //
-// 
 //
-// 示例 1： 
-// 
-// 
+//
+// 示例 1：
+//
+//
 //输入：root = [3,9,20,null,null,15,7]
 //输出：[[3],[20,9],[15,7]]
-// 
 //
-// 示例 2： 
 //
-// 
+// 示例 2：
+//
+//
 //输入：root = [1]
 //输出：[[1]]
-// 
 //
-// 示例 3： 
 //
-// 
+// 示例 3：
+//
+//
 //输入：root = []
 //输出：[]
-// 
 //
-// 
 //
-// 提示： 
 //
-// 
-// 树中节点数目在范围 [0, 2000] 内 
-// -100 <= Node.val <= 100 
-// 
+//
+// 提示：
+//
+//
+// 树中节点数目在范围 [0, 2000] 内
+// -100 <= Node.val <= 100
+//
 //
 // Related Topics 树 广度优先搜索 二叉树 👍 895 👎 0
 
 
 package leetcode.editor.cn;
 
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -72,24 +73,23 @@ public class P103_BinaryTreeZigzagLevelOrderTraversal {
      */
     class Solution {
         public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
-            List<List<Integer>> res = new LinkedList<>();
+            List<List<Integer>> res = new ArrayList<>();
             if (root == null) return res;
-            Deque<TreeNode> queue = new LinkedList<>();
-            queue.offer(root);
-            boolean flag = true;
-            while (!queue.isEmpty()) {
-                int len = queue.size();
+            Deque<TreeNode> deque = new LinkedList<>();
+            deque.offer(root);
+            boolean flag = false;
+            while (!deque.isEmpty()) {
+                int len = deque.size();
                 LinkedList<Integer> itemList = new LinkedList<>();
-                while (len > 0) {
-                    TreeNode node = queue.poll();
-                    if (node.left != null) queue.offer(node.left);
-                    if (node.right != null) queue.offer(node.right);
+                for (int i = 0; i < len; ++i) {
+                    TreeNode node = deque.poll();
                     if (flag) {
-                        itemList.addLast(node.val);
-                    } else {
                         itemList.addFirst(node.val);
+                    } else {
+                        itemList.addLast(node.val);
                     }
-                    len--;
+                    if (node.left != null) deque.offer(node.left);
+                    if (node.right != null) deque.offer(node.right);
                 }
                 flag = !flag;
                 res.add(itemList);

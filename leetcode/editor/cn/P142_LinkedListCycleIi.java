@@ -88,16 +88,15 @@ public class P142_LinkedListCycleIi {
         public ListNode detectCycle(ListNode head) {
             ListNode fast = head, slow = head;
             while (fast != null && fast.next != null) {
-                fast = fast.next.next;
                 slow = slow.next;
-                // 相遇代表有环
-                if (fast == slow) {
+                fast = fast.next.next;
+                if (slow == fast) {
                     fast = head;
                     while (fast != slow) {
-                        fast = fast.next;
                         slow = slow.next;
+                        fast = fast.next;
                     }
-                    return fast;
+                    return slow;
                 }
             }
             return null;

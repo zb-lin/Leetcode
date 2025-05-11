@@ -38,6 +38,8 @@
 
 package leetcode.editor.cn;
 
+import java.util.ArrayList;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -55,28 +57,22 @@ public class P46_Permutations {
 
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
-        List<List<Integer>> res = new LinkedList<>();
-        LinkedList<Integer> track = new LinkedList<>();
-        boolean[] used;
-
         public List<List<Integer>> permute(int[] nums) {
-            used = new boolean[nums.length];
-            backtrack(nums);
+            List<List<Integer>> res = new ArrayList<>();
+            backtrack(res, new ArrayList<>(), nums);
             return res;
         }
 
-        public void backtrack(int[] nums) {
-            if (track.size() == nums.length) {
-                res.add(new LinkedList<>(track));
+        private void backtrack(List<List<Integer>> res, List<Integer> path, int[] nums) {
+            if (path.size() == nums.length) {
+                res.add(new ArrayList<>(path));
                 return;
             }
-            for (int i = 0; i < nums.length; ++i) {
-                if (!used[i]) {
-                    used[i] = true;
-                    track.addLast(nums[i]);
-                    backtrack(nums);
-                    track.removeLast();
-                    used[i] = false;
+            for (int i = 0; i < nums.length; i++) {
+                if (!path.contains(nums[i])) {
+                    path.add(nums[i]);
+                    backtrack(res, path, nums);
+                    path.remove(path.size() - 1);
                 }
             }
         }

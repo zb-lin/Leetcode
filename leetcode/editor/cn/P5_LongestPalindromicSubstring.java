@@ -45,92 +45,50 @@ public class P5_LongestPalindromicSubstring {
 
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
-
+        /**
+         * 寻找字符串中的最长回文子串
+         * @param s 输入字符串
+         * @return 最长回文子串
+         */
         public String longestPalindrome(String s) {
-            int n = s.length();
-            int left = 0, right = 0;
-            for (int i = 0; i < n; i++) {
-                int len1 = expand(s, i, i);
-                int len2 = expand(s, i, i + 1);
-                int len = Math.max(len1, len2);
-                if (len > right - left) {
-                    left = i - (len - 1) / 2;
-                    right = i + len / 2;
-                }
+            // max数组存储当前找到的最长回文的起止索引
+            // max[0]是起始索引，max[1]是结束索引
+            int[] max = {0, 0};
+
+            // 遍历字符串中的每个字符作为可能的回文中心
+            for (int i = 0; i < s.length(); i++) {
+                // 处理奇数长度的回文（中心为一个字符）
+                expand(s, i, i, max);
+                // 处理偶数长度的回文（中心为两个相同字符）
+                expand(s, i, i + 1, max);
             }
-            return s.substring(left, right + 1);
+
+            // 根据记录的起止索引返回最长回文子串
+            return s.substring(max[0], max[1] + 1);
         }
 
-        public int expand(String s, int left, int right) {
-            while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
-                left--;
-                right++;
+        /**
+         * 从中心向两边扩展寻找回文
+         * @param s 输入字符串
+         * @param l 中心左边界（包含）
+         * @param r 中心右边界（包含）
+         * @param max 记录最长回文起止索引的数组
+         */
+        private void expand(String s, int l, int r, int[] max) {
+            // 向两边扩展，直到字符不匹配或到达字符串边界
+            while (l >= 0 && r < s.length() && s.charAt(l) == s.charAt(r)) {
+                l--;
+                r++;
             }
-            return right - left - 1;
+
+            // 计算当前回文长度（r-l-1）并与当前最大值比较
+            // 因为循环结束时l和r已经超出回文边界，所以实际长度是(r-1)-(l+1)+1 = r-l-1
+            if (r - l - 1 > max[1] - max[0] + 1) {
+                // 更新最长回文索引
+                max[0] = l + 1;  // 回文实际开始位置
+                max[1] = r - 1;  // 回文实际结束位置
+            }
         }
-
-
-/*        public String longestPalindrome(String s) {
-            int maxLen = 0;
-            int start = 0, end = 0;
-            for (int i = 0; i < s.length(); ++i) {
-                int result1[] = expand(s, i, i);
-                int result2[] = expand(s, i, i + 1);
-                int len1 = result1[1] - result1[0] + 1;
-                int len2 = result2[1] - result2[0] + 1;
-                if (len1 > len2) {
-                    if (len1 > maxLen) {
-                        maxLen = len1;
-                        start = result1[0];
-                        end = result1[1];
-                    }
-                } else {
-                    if (len2 > maxLen) {
-                        maxLen = len2;
-                        start = result2[0];
-                        end = result2[1];
-                    }
-                }
-            }
-            return s.substring(start, end + 1);
-        }
-
-        public int[] expand(String s, int left, int right) {
-            if (right >= s.length() || s.charAt(left) != s.charAt(right)) {
-                return new int[]{0, 0};
-            }
-            while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
-                left--;
-                right++;
-            }
-            return new int[]{++left, --right};
-        }*/
-
-
-
-/*        public String longestPalindrome(String s) {
-            int len = s.length();
-            if (len < 2) return s;
-            int start = 0, end = 0;
-            for (int i = 0; i < len; ++i) {
-                int len1 = expandAroundCenter(s, i, i);
-                int len2 = expandAroundCenter(s, i, i + 1);
-                int L = Math.max(len1, len2);
-                if (L > end - start) {
-                    start = i - (L - 1) / 2;
-                    end = i + L / 2;
-                }
-            }
-            return s.substring(start, end + 1);
-        }
-
-        public int expandAroundCenter(String s, int left, int right) {
-            while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
-                left--;
-                right++;
-            }
-            return right - left - 1;
-        }*/
     }
 //leetcode submit region end(Prohibit modification and deletion)
 

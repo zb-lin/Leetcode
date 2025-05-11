@@ -52,40 +52,31 @@ public class P54_SpiralMatrix {
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
         public List<Integer> spiralOrder(int[][] matrix) {
-            PriorityQueue<ListNode> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a.val));
-            int n = matrix.length, m = matrix[0].length;
             List<Integer> res = new ArrayList<>();
-            // 上下边界
-            int up = 0, low = n - 1;
-            // 左右边界
-            int left = 0, right = m - 1;
-            // 该填入的值
-            while (res.size() < n * m) {
+            int m = matrix.length, n = matrix[0].length, size = m * n;
+            int up = 0, low = m - 1, left = 0, right = n - 1;
+            while (res.size() < size) {
                 if (up <= low) {
-                    // 上边界从左往右
-                    for (int j = left; j <= right; j++) {
-                        res.add(matrix[up][j]);
+                    for (int col = left; col <= right; ++col) {
+                        res.add(matrix[up][col]);
                     }
                     up++;
                 }
                 if (left <= right) {
-                    // 右边界从上到下
-                    for (int i = up; i <= low; i++) {
-                        res.add(matrix[i][right]);
+                    for (int row = up; row <= low; ++row) {
+                        res.add(matrix[row][right]);
                     }
                     right--;
                 }
                 if (up <= low) {
-                    // 下边界从右往左
-                    for (int j = right; j >= left; j--) {
-                        res.add(matrix[low][j]);
+                    for (int col = right; col >= left; --col) {
+                        res.add(matrix[low][col]);
                     }
                     low--;
                 }
                 if (left <= right) {
-                    // 左边界从下到上
-                    for (int i = low; i >= up; i--) {
-                        res.add(matrix[i][left]);
+                    for (int row = low; row >= up; --row) {
+                        res.add(matrix[row][left]);
                     }
                     left++;
                 }

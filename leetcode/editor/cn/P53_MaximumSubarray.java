@@ -60,10 +60,10 @@ public class P53_MaximumSubarray {
     class Solution {
         public int maxSubArray(int[] nums) {
             int res = Integer.MIN_VALUE, temp = 0;
-            for (int num : nums) {
-                temp += num;
+            for (int i = 0; i < nums.length; i++) {
+                temp += nums[i];
                 res = Math.max(res, temp);
-                if (temp <= 0) {
+                if (temp < 0) {
                     temp = 0;
                 }
             }

@@ -65,25 +65,26 @@ public class P72_EditDistance {
     class Solution {
         public int minDistance(String word1, String word2) {
             int m = word1.length(), n = word2.length();
-            int[][] dp = new int[m + 1][n + 1];
-            for (int i = 0; i <= m; i++) {
+            int[][] dp = new int[n + 1][m + 1];
+            for (int i = 0; i <= n; ++i) {
                 dp[i][0] = i;
             }
-            for (int j = 0; j <= n; j++) {
+            for (int j = 0; j <= m; j++) {
                 dp[0][j] = j;
             }
-            for (int i = 1; i <= m; i++) {
-                for (int j = 1; j <= n; j++) {
-                    int left = dp[i][j - 1];
-                    int up = dp[i - 1][j];
-                    int leftUp = dp[i - 1][j - 1];
-                    if (word1.charAt(i - 1) == word2.charAt(j - 1)) {
-                        leftUp--;
+            for (int i = 1; i <= n; ++i) {
+                for (int j = 1; j <= m; ++j) {
+                    if (word1.charAt(j - 1) == word2.charAt(i - 1)) {
+                        dp[i][j] = dp[i - 1][j - 1];
+                    } else {
+                        int up = dp[i - 1][j];
+                        int left = dp[i][j - 1];
+                        int leftUp = dp[i - 1][j - 1];
+                        dp[i][j] = 1 + Math.min(up, Math.min(leftUp, left));
                     }
-                    dp[i][j] = Math.min(up, Math.min(leftUp, left)) + 1;
                 }
             }
-            return dp[m][n];
+            return dp[n][m];
         }
     }
 //leetcode submit region end(Prohibit modification and deletion)

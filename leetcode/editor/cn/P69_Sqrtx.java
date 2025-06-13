@@ -50,17 +50,32 @@ public class P69_Sqrtx {
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
         public int mySqrt(int x) {
-            // right 不会大于 x / 2
-            long left = 0, right = x / 2;
+            // 处理特殊情况
+            if (x == 0 || x == 1) {
+                return x;
+            }
+
+            // 初始化左右边界
+            long left = 1;
+            long right = x;
+            long result = 0;
+
+            // 二分查找
             while (left <= right) {
                 long mid = left + (right - left) / 2;
-                if (mid * mid < x) {
+                long square = mid * mid;
+
+                if (square == x) {
+                    return (int) mid;  // 找到精确平方根
+                } else if (square < x) {
                     left = mid + 1;
+                    result = mid;      // 记录当前最接近的较小值
                 } else {
                     right = mid - 1;
                 }
             }
-            return (int) (left * left > x ? left - 1 : left);
+
+            return (int) result;  // 返回整数部分
         }
     }
 //leetcode submit region end(Prohibit modification and deletion)

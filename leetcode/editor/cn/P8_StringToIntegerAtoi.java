@@ -138,84 +138,28 @@ public class P8_StringToIntegerAtoi {
     class Solution {
 
         public int myAtoi(String s) {
-            double result = 0;
-            int flag = 1;
-            int i = 0;
-            while (i < s.length()) {
-                char ch = s.charAt(i);
-                if (ch == ' ') {
-                    i++;
-                    continue;
+            if (s == null || s.isEmpty()) return 0;
+           int result = 0;
+           int index = 0;
+           int sign = 1;
+           while (index < s.length() && s.charAt(index) == ' ') {
+               index++;
+           }
+           if (index < s.length() && (s.charAt(index) == '-' || s.charAt(index) == '+')) {
+               sign = s.charAt(index) == '-' ? -1 : 1;
+               index++;
+           }
+            while (index < s.length() && Character.isDigit(s.charAt(index))) {
+                int digit = s.charAt(index) - '0';
+                if (result > (Integer.MAX_VALUE - digit) / 10) {
+                    return sign == 1 ? Integer.MAX_VALUE : Integer.MIN_VALUE;
                 }
-                if (ch == '-') {
-                    flag = -1;
-                    i++;
-                } else if (ch == '+') {
-                    i++;
-                }
-                if (i >= s.length()) break;
-                ch = s.charAt(i);
-                if ('0' <= ch && ch <= '9') {
-                    while ('0' <= ch && ch <= '9') {
-                        result = result * 10 + (ch - '0');
-                        i++;
-                        if (i < s.length()) {
-                            ch = s.charAt(i);
-                        } else {
-                            break;
-                        }
-                    }
-                    result = result * flag;
-                    if (result > Integer.MAX_VALUE) {
-                        return Integer.MAX_VALUE;
-                    } else if (result < Integer.MIN_VALUE) {
-                        return Integer.MIN_VALUE;
-                    } else {
-                        return (int) result;
-                    }
-                } else {
-                    return 0;
-                }
+                result = result * 10 + digit;
+                index++;
             }
-            return 0;
+            return sign * result;
         }
 
-
-        /*public int myAtoi(String s) {
-
-            if (Objects.equals(s, "") || Objects.equals(s, "-")) return 0;
-            int begin = 0;
-            int isNegative = 1;
-            while (s.charAt(begin) == ' ') {
-                begin++;
-                if (begin >= s.length()) return 0;
-            }
-            if (s.charAt(begin) == '-') {
-                isNegative = -1;
-                begin++;
-            } else if (s.charAt(begin) == '+') {
-                begin++;
-            }
-            if (begin >= s.length()) return 0;
-            if (!Character.isDigit(s.charAt(begin))) {
-                return 0;
-            }
-            int end = begin;
-            while (end < s.length() && Character.isDigit(s.charAt(end))) {
-                end++;
-            }
-            double res = (end == s.length()
-                    ? Double.parseDouble(s.substring(begin))
-                    : Double.parseDouble(s.substring(begin, end)))
-                    * isNegative;
-            if (res >= Integer.MAX_VALUE) {
-                return Integer.MAX_VALUE;
-            } else if (res <= Integer.MIN_VALUE) {
-                return Integer.MIN_VALUE;
-            } else {
-                return (int) res;
-            }
-        }*/
     }
 //leetcode submit region end(Prohibit modification and deletion)
 

@@ -58,45 +58,26 @@ public class P32_LongestValidParentheses {
 
     public static void main(String[] args) {
         Solution solution = new P32_LongestValidParentheses().new Solution();
-        System.out.println(solution.getPrimeNumber(100));
-
     }
 
 
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
-        public List<Integer> getPrimeNumber(int range) {
-            int[] a = new int[range];
-            for (int i = 0; i < a.length - 1; i++) {
-                a[i] = i + 2;
-            }
-            // prime number is 0 , composite number is 0
-            // 素数为本身，合数为0
-            for (int i = 2; i <= a.length; i++) {
-                for (int j = 0; j < a.length - 1; j++) {
-                    if (a[j] != 0 && (a[j] % i == 0 && a[j] / i != 1)) {
-                        a[j] = 0;
-                    }
-                }
-            }
-            return Arrays.stream(a).filter(num -> num != 0).boxed().collect(Collectors.toList());
-        }
-
         public int longestValidParentheses(String s) {
-            int result = 0;
-            int n = s.length();
-            int[] dp = new int[n];
-            for (int i = 1; i < n; ++i) {
+            int[] dp = new int[s.length()];
+            int maxLen = 0;
+            for (int i = 1; i < s.length(); ++i) {
                 if (s.charAt(i) == ')') {
                     if (s.charAt(i - 1) == '(') {
-                        dp[i] = (i >= 2 ? dp[i - 2] : 0) + 2;
-                    } else if (i - dp[i - 1] > 0 && s.charAt(i - dp[i - 1] - 1) == '(') {
-                        dp[i] = (i - dp[i - 1] - 2 > 0 ? dp[i - dp[i - 1] - 2] : 0) + dp[i - 1] + 2;
+                        dp[i] = (i - 2 >= 0 ? dp[i - 2] : 0) + 2;
+                    } else if (i - dp[i - 1] - 1 >= 0 && s.charAt(i - dp[i - 1] - 1) == '(' ) {
+                        dp[i] = dp[i - 1] + 2 +
+                                ((i - dp[i - 1] - 2) >= 0 ? dp[i - dp[i - 1] - 2] : 0);
                     }
                 }
-                result = Math.max(result, dp[i]);
+                maxLen = Math.max(maxLen, dp[i]);
             }
-            return result;
+            return maxLen;
         }
     }
 //leetcode submit region end(Prohibit modification and deletion)

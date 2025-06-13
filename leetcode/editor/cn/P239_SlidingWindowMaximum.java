@@ -55,50 +55,47 @@ import java.util.LinkedList;
 public class P239_SlidingWindowMaximum {
     public static void main(String[] args) {
     }
-    //leetcode submit region begin(Prohibit modification and deletion)
 
 }
+//leetcode submit region begin(Prohibit modification and deletion)
 
-class MyQueue {
-    Deque<Integer> deque = new LinkedList<>();
 
-    void poll(int val) {
-        if (!deque.isEmpty() && deque.getFirst() == val) {
-            deque.removeFirst();
-        }
-    }
-
-    void push(int val) {
-        while (!deque.isEmpty() && deque.getLast() < val) {
-            deque.removeLast();
-        }
-        deque.addLast(val);
-    }
-
-    int peek() {
-        return deque.getFirst();
-    }
-}
 
 class Solution {
-    public int[] maxSlidingWindow(int[] nums, int k) {
-        int n = nums.length;
-        if (n == 1) {
-            return nums;
+    class MyQueue {
+        Deque<Integer> deque = new LinkedList<>();
+
+        void poll(int val) {
+            if (!deque.isEmpty() && deque.getFirst() == val) {
+                deque.removeFirst();
+            }
         }
-        int len = n - k + 1;
-        int[] result = new int[len];
-        int index = 0;
+
+        void push(int val) {
+            while (!deque.isEmpty() && deque.getLast() < val) {
+                deque.removeLast();
+            }
+            deque.addLast(val);
+        }
+
+        int peek() {
+            return deque.getFirst();
+        }
+    }
+
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        int[] res = new int[nums.length - k + 1];
         MyQueue myQueue = new MyQueue();
         for (int i = 0; i < k; ++i) {
             myQueue.push(nums[i]);
         }
-        result[index++] = myQueue.peek();
-        for (int i = k; i < n; ++i) {
-            myQueue.poll(nums[i - k]);
-            myQueue.push(nums[i]);
-            result[index++] = myQueue.peek();
+        res[0] = myQueue.peek();
+        for (int i = 1; i < nums.length - k + 1; i++) {
+            myQueue.poll(nums[i - 1]);
+            myQueue.push(nums[i + k - 1]);
+            res[i] = myQueue.peek();
         }
-        return result;
+        return res;
     }
 }
+//leetcode submit region end(Prohibit modification and deletion)

@@ -84,24 +84,19 @@ public class P31_NextPermutation {
                 }
                 swap(nums, i, j);
             }
-            reverse(nums, i + 1);
+            reverse(nums, i + 1, nums.length - 1);
         }
 
+        public void reverse(int[] nums, int l, int r) {
+            while (l < r) {
+                swap(nums, l++, r--);
+            }
+        }
         public void swap(int[] nums, int i, int j) {
             int temp = nums[i];
             nums[i] = nums[j];
             nums[j] = temp;
         }
-
-        public void reverse(int[] nums, int start) {
-            int left = start, right = nums.length - 1;
-            while (left < right) {
-                swap(nums, left, right);
-                left++;
-                right--;
-            }
-        }
-
     }
 //leetcode submit region end(Prohibit modification and deletion)
 

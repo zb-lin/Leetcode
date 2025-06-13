@@ -118,6 +118,34 @@ public class P215_KthLargestElementInAnArray {
             nums[i] = nums[j];
             nums[j] = temp;
         }
+
+        // public int quickQuery(int[] nums, int left, int right, int k) {
+        //     if (left >= right) return nums[left];
+        //     int random = (int)(Math.random() * (right - left + 1)) + left;
+        //     swap(nums, random, left);
+        //     int pivot = nums[left];
+        //     int lt = left;
+        //     int gt = right;
+        //     int i = left + 1;
+        //     while (i <= gt) {
+        //         if (nums[i] < pivot) {
+        //             swap(nums, i++, lt++);
+        //         } else if (nums[i] > pivot) {
+        //             swap(nums, i, gt--);
+        //         } else {
+        //             i++;
+        //         }
+        //     }
+
+        //     if (k < lt) {
+        //         return quickQuery(nums, left, lt - 1, k);
+        //     } else if (k > gt) {
+        //         return quickQuery(nums, gt + 1, right, k);
+        //     } else {
+        //         return nums[k];
+        //     }
+        // }
+
     }
 //leetcode submit region end(Prohibit modification and deletion)
 

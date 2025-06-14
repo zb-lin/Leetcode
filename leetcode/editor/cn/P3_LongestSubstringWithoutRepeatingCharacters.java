@@ -59,29 +59,18 @@ public class P3_LongestSubstringWithoutRepeatingCharacters {
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
         public int lengthOfLongestSubstring(String s) {
-            // 使用哈希集合记录当前窗口中的字符
             Set<Character> charSet = new HashSet<>();
-            int maxLength = 0;
-            int left = 0;  // 滑动窗口左边界
-            int right = 0; // 滑动窗口右边界
-
+            int left = 0, right = 0, maxLen = 0;
             while (right < s.length()) {
-                char currentChar = s.charAt(right);
-
-                // 如果字符已存在，移动左边界直到移除重复字符
-                if (charSet.contains(currentChar)) {
-                    charSet.remove(s.charAt(left));
-                    left++;
-                } else {
-                    // 字符不存在，添加到集合并扩展右边界
-                    charSet.add(currentChar);
-                    right++;
-                    // 更新最大长度
-                    maxLength = Math.max(maxLength, right - left);
+                char ch = s.charAt(right);
+                while (charSet.contains(ch)) {
+                    charSet.remove(s.charAt(left++));
                 }
+                charSet.add(ch);
+                maxLen = Math.max(maxLen, right - left + 1);
+                right++;
             }
-
-            return maxLength;
+            return maxLen;
         }
     }
 //leetcode submit region end(Prohibit modification and deletion)

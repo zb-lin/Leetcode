@@ -58,22 +58,19 @@ public class P415_AddStrings {
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
         public String addStrings(String num1, String num2) {
-            StringBuilder res = new StringBuilder();
-            int i = num1.length() - 1, j = num2.length() - 1;
-            int carry = 0; // 进位
-
-            // 从后往前逐位相加
-            while (i >= 0 || j >= 0 || carry > 0) {
-                // 获取当前位的数字，如果已超出范围则用0代替
-                int x = i >= 0 ? num1.charAt(i--) - '0' : 0;
-                int y = j >= 0 ? num2.charAt(j--) - '0' : 0;
-
-                int sum = x + y + carry;
-                res.append(sum % 10); // 当前位结果
-                carry = sum / 10;    // 计算进位
+            int carry = 0, n = num1.length() - 1, m = num2.length() - 1;
+            StringBuilder sb = new StringBuilder();
+            while (n >= 0 || m >= 0) {
+                int n1 = n >= 0 ? num1.charAt(n) - '0' : 0;
+                int m1 = m >= 0 ? num2.charAt(m) - '0' : 0;
+                int ans = n1 + m1 + carry;
+                sb.append(ans % 10);
+                carry = ans / 10;
+                n--;
+                m--;
             }
-
-            return res.reverse().toString(); // 反转得到正确顺序
+            if (carry > 0) sb.append(carry);
+            return sb.reverse().toString();
         }
     }
 //leetcode submit region end(Prohibit modification and deletion)

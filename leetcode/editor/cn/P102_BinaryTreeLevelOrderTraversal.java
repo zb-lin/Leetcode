@@ -76,15 +76,15 @@ public class P102_BinaryTreeLevelOrderTraversal {
             List<List<Integer>> res = new ArrayList<>();
             if (root == null) return res;
             Deque<TreeNode> deque = new LinkedList<>();
-            deque.offer(root);
+            deque.addLast(root);
             while (!deque.isEmpty()) {
                 int len = deque.size();
                 List<Integer> itemList = new ArrayList<>();
                 for (int i = 0; i < len; i++) {
-                    TreeNode node = deque.poll();
+                    TreeNode node = deque.removeFirst();
                     itemList.add(node.val);
-                    if (node.left != null) deque.offer(node.left);
-                    if (node.right != null) deque.offer(node.right);
+                    if (node.left != null) deque.addLast(node.left);
+                    if (node.right != null) deque.addLast(node.right);
                 }
                 res.add(itemList);
             }

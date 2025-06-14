@@ -65,14 +65,21 @@ public class P101_SymmetricTree {
      */
     class Solution {
         public boolean isSymmetric(TreeNode root) {
-            return check(root, root);
+            if (root == null || (root.left == null && root.right == null)) return true;
+            if (root.left == null || root.right == null) return false;
+            return isSymmetric(root.left, root.right);
+
         }
 
-        public boolean check(TreeNode p, TreeNode q) {
-            if (p == null && q == null) return true;
-            if (p == null || q == null) return false;
-            return p.val == q.val && check(p.left, q.right) && check(p.right, q.left);
+        public boolean isSymmetric(TreeNode left, TreeNode right) {
+            if (left == null && right == null) return true;
+            if (left == null || right == null) return false;
+            return left.val == right.val && isSymmetric(left.left, right.right) && isSymmetric(left.right, right.left);
+
         }
+
+
+
     }
 //leetcode submit region end(Prohibit modification and deletion)
 

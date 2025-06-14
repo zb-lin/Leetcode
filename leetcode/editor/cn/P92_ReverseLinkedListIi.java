@@ -65,19 +65,35 @@ public class P92_ReverseLinkedListIi {
      */
     class Solution {
         public ListNode reverseBetween(ListNode head, int left, int right) {
-            ListNode dummy = new ListNode(0, head);
-            ListNode pre = dummy;
-            for (int i = 1; i < left; ++i) {
-                pre = pre.next;
+            ListNode dummy = new ListNode(-1, head);
+            ListNode prev = dummy;
+            for (int i = 0; i < left - 1; ++i) {
+                prev = prev.next;
             }
-            ListNode curr = pre.next;
-            for (int i = left; i < right; ++i) {
-                ListNode next = curr.next;
-                curr.next = next.next;
-                next.next = pre.next;
-                pre.next = next;
+            ListNode leftNode = prev.next;
+            ListNode rightNode = leftNode;
+
+            for (int i = 0; i < right - left; ++i) {
+                rightNode = rightNode.next;
             }
+            ListNode tail = rightNode.next;
+            ListNode[] result = reverse(leftNode, rightNode);
+            leftNode = result[0];
+            rightNode = result[1];
+            prev.next = leftNode;
+            rightNode.next = tail;
             return dummy.next;
+        }
+
+        public ListNode[] reverse(ListNode head, ListNode tail) {
+            ListNode prev = tail.next, curr = head;
+            while (prev != tail) {
+                ListNode next = curr.next;
+                curr.next = prev;
+                prev = curr;
+                curr = next;
+            }
+            return new ListNode[]{tail, head};
         }
 
     }

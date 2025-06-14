@@ -38,10 +38,7 @@
 
 package leetcode.editor.cn;
 
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 全排列
@@ -55,25 +52,30 @@ public class P46_Permutations {
     }
 
 
+
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
+
+        List<List<Integer>> res = new ArrayList<>();
+
         public List<List<Integer>> permute(int[] nums) {
-            List<List<Integer>> res = new ArrayList<>();
-            backtrack(res, new ArrayList<>(), nums);
+            backtrack(nums, new LinkedList<>(), new boolean[nums.length]);
             return res;
         }
 
-        private void backtrack(List<List<Integer>> res, List<Integer> path, int[] nums) {
-            if (path.size() == nums.length) {
-                res.add(new ArrayList<>(path));
+        private void backtrack(int[] nums, LinkedList<Integer> itemList, boolean[] visited) {
+            if (itemList.size() == nums.length) {
+                res.add(new ArrayList<>(itemList));
                 return;
             }
-            for (int i = 0; i < nums.length; i++) {
-                if (!path.contains(nums[i])) {
-                    path.add(nums[i]);
-                    backtrack(res, path, nums);
-                    path.remove(path.size() - 1);
-                }
+            for (int i = 0; i < nums.length; ++i) {
+                if (visited[i]) continue;
+                visited[i] = true;
+                itemList.addLast(nums[i]);
+                backtrack(nums, itemList, visited);
+                itemList.removeLast();
+                visited[i] = false;
+
             }
         }
     }

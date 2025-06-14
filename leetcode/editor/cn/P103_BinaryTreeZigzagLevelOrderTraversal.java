@@ -73,28 +73,31 @@ public class P103_BinaryTreeZigzagLevelOrderTraversal {
      */
     class Solution {
         public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
-            List<List<Integer>> res = new ArrayList<>();
-            if (root == null) return res;
+            List<List<Integer>> result = new ArrayList<>();
+            if (root == null) return result;
+            boolean flag = true;
             Deque<TreeNode> deque = new LinkedList<>();
-            deque.offer(root);
-            boolean flag = false;
+            deque.addFirst(root);
             while (!deque.isEmpty()) {
                 int len = deque.size();
-                LinkedList<Integer> itemList = new LinkedList<>();
+                List<Integer> itemList = new ArrayList<>();
                 for (int i = 0; i < len; ++i) {
-                    TreeNode node = deque.poll();
                     if (flag) {
-                        itemList.addFirst(node.val);
+                        TreeNode node = deque.removeFirst();
+                        itemList.add(node.val);
+                        if (node.left != null) deque.addLast(node.left);
+                        if (node.right != null) deque.addLast(node.right);
                     } else {
-                        itemList.addLast(node.val);
+                        TreeNode node = deque.removeLast();
+                        itemList.add(node.val);
+                        if (node.right != null) deque.addFirst(node.right);
+                        if (node.left != null) deque.addFirst(node.left);
                     }
-                    if (node.left != null) deque.offer(node.left);
-                    if (node.right != null) deque.offer(node.right);
                 }
+                result.add(itemList);
                 flag = !flag;
-                res.add(itemList);
             }
-            return res;
+            return result;
         }
     }
 //leetcode submit region end(Prohibit modification and deletion)

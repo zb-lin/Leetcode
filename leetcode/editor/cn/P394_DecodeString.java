@@ -55,6 +55,10 @@
 
 package leetcode.editor.cn;
 
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.Stack;
+
 /**
  * 字符串解码
  *
@@ -70,44 +74,32 @@ public class P394_DecodeString {
 
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
-        int ptr = 0;
-        String scr;
-
         public String decodeString(String s) {
-            scr = s;
-            return getString();
-        }
-
-        public String getString() {
-            if (ptr == scr.length() || scr.charAt(ptr) == ']') {
-                return "";
-            }
-            char curr = scr.charAt(ptr);
-            StringBuilder res = new StringBuilder();
-            if (Character.isDigit(curr)) {
-                int count = getDigit();
-                ptr++;
-                String str = getString();
-                ptr++;
-                while (count-- > 0) {
-                    res.append(str);
+            StringBuilder currentStr = new StringBuilder();
+            Deque<StringBuilder> strStack = new LinkedList<>();
+            Deque<Integer> numStack = new LinkedList<>();
+            int currNum = 0;
+            for (char c : s.toCharArray()) {
+                if (Character.isDigit(c)) {
+                    currNum = currNum * 10 + (c - '0');
+                } else if (c == '[') {
+                    strStack.addLast(currentStr);
+                    numStack.addLast(currNum);
+                    currentStr = new StringBuilder();
+                    currNum = 0;
+                } else if (c == ']') {
+                     StringBuilder prev = strStack.removeLast();
+                     int repeatTimes = numStack.removeLast();
+                     for (int i = 0; i < repeatTimes; ++i) {
+                         prev.append(currentStr);
+                     }
+                     currentStr = prev;
+                } else {
+                    currentStr.append(c);
                 }
-            } else if (Character.isLetter(curr)) {
-                res.append(curr);
-                ptr++;
             }
-            return res + getString();
+            return currentStr.toString();
         }
-
-        public int getDigit() {
-            int res = 0;
-            while (ptr < scr.length() && Character.isDigit(scr.charAt(ptr))) {
-                res = res * 10 + scr.charAt(ptr++) - '0';
-            }
-            return res;
-        }
-
-
     }
 //leetcode submit region end(Prohibit modification and deletion)
 

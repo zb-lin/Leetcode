@@ -47,6 +47,7 @@
 package leetcode.editor.cn;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -63,26 +64,28 @@ public class P39_CombinationSum {
 
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
-        List<List<Integer>> res = new ArrayList<>();
-        List<Integer> track = new ArrayList<>();
 
+        List<List<Integer>> res = new ArrayList<>();
         public List<List<Integer>> combinationSum(int[] candidates, int target) {
-            backtrack(candidates, target, 0, 0);
+            backtrack(candidates, target, 0, new LinkedList<>(), 0);
             return res;
         }
 
-        public void backtrack(int[] candidates, int target, int sum, int index) {
-            if (sum > target) return;
-            if (sum == target) {
-                res.add(new ArrayList<>(track));
+        public void backtrack(int[] candidates, int target, int index, LinkedList<Integer> itemList, int ans) {
+            if (target == ans) {
+                res.add(new ArrayList<>(itemList));
                 return;
             }
-            for (int i = index; i < candidates.length; i++) {
-                track.add(candidates[i]);
-                backtrack(candidates, target, sum + candidates[i], i);
-                track.remove(track.size() - 1);
+            if (target < ans) {
+                return;
+            }
+            for (int i = index; i < candidates.length; ++i) {
+                itemList.add(candidates[i]);
+                backtrack(candidates, target, i, itemList, ans + candidates[i]);
+                itemList.removeLast();
             }
         }
+
     }
 //leetcode submit region end(Prohibit modification and deletion)
 

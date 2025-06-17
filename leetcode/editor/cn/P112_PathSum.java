@@ -79,12 +79,12 @@ public class P112_PathSum {
         boolean flag = false;
 
         public boolean hasPathSum(TreeNode root, int targetSum) {
+            if (root == null) return false;
             hasPathSum(root, targetSum, 0);
             return flag;
         }
 
         public void hasPathSum(TreeNode root, int targetSum, int sum) {
-            if (root == null) return;
             sum += root.val;
             if (root.left == null && root.right == null) {
                 if (targetSum == sum) {
@@ -92,8 +92,8 @@ public class P112_PathSum {
                 }
                 return;
             }
-            hasPathSum(root.left, targetSum, sum);
-            hasPathSum(root.right, targetSum, sum);
+            if (root.left != null) hasPathSum(root.left, targetSum, sum);
+            if (root.right != null) hasPathSum(root.right, targetSum, sum);
         }
     }
 //leetcode submit region end(Prohibit modification and deletion)

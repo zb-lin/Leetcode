@@ -42,6 +42,8 @@
 package leetcode.editor.cn;
 
 import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -74,19 +76,24 @@ public class P94_BinaryTreeInorderTraversal {
      * }
      */
     class Solution {
-        List<Integer> res = new ArrayList<>();
-
         public List<Integer> inorderTraversal(TreeNode root) {
-            dfs(root);
+            List<Integer> res = new ArrayList<>();
+            if (root == null) return res;
+            Deque<TreeNode> deque = new LinkedList<>();
+            deque.push(root);
+            while (!deque.isEmpty()) {
+                TreeNode node = deque.poll();
+                if (node != null) {
+                    if (node.right != null) deque.push(node.right);
+                    deque.push(node);
+                    deque.push(null);
+                    if (node.left != null) deque.push(node.left);
+                } else {
+                    node = deque.poll();
+                    res.add(node.val);
+                }
+            }
             return res;
-        }
-
-        public void dfs(TreeNode node) {
-            
-            if (node == null) return;
-            dfs(node.left);
-            res.add(node.val);
-            dfs(node.right);
         }
     }
 //leetcode submit region end(Prohibit modification and deletion)

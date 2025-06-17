@@ -69,14 +69,29 @@ public class P98_ValidateBinarySearchTree {
      * }
      */
     class Solution {
-        TreeNode max = null;
+        // 前一个节点的值，初始为最小可能值
+        long prev = Long.MIN_VALUE;
 
         public boolean isValidBST(TreeNode root) {
-            if (root == null) return true;
-            if (!isValidBST(root.left) || (max != null && root.val <= max.val)) {
+            // 空树是有效的BST
+            if (root == null) {
+                return true;
+            }
+
+            // 先验证左子树
+            if (!isValidBST(root.left)) {
                 return false;
             }
-            max = root;
+
+            // 检查当前节点值是否大于前一个节点值
+            if (root.val <= prev) {
+                return false;
+            }
+
+            // 更新前一个节点值为当前节点值
+            prev = root.val;
+
+            // 验证右子树
             return isValidBST(root.right);
         }
     }

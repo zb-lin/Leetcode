@@ -76,7 +76,7 @@ public class P124_BinaryTreeMaximumPathSum {
             if (root == null) return 0;
             int left = Math.max(dfs(root.left), 0);
             int right = Math.max(dfs(root.right), 0);
-            res = Math.max(res, right + left + root.val);
+            res = Math.max(right + left + root.val, res);
             return Math.max(left, right) + root.val;
         }
     }

@@ -46,6 +46,7 @@ public class P22_GenerateParentheses {
 
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
+
         List<String> res = new ArrayList<>();
 
         public List<String> generateParenthesis(int n) {
@@ -54,20 +55,15 @@ public class P22_GenerateParentheses {
         }
 
         public void backtrack(int n, int leftCount, int rightCount, StringBuilder sb) {
-            if (sb.length() == n * 2) {
+            if (leftCount + rightCount == n * 2) {
                 res.add(sb.toString());
-                return;
             }
-            if (leftCount == rightCount) {
+            if (leftCount < n) {
                 sb.append('(');
                 backtrack(n, leftCount + 1, rightCount, sb);
                 sb.deleteCharAt(sb.length() - 1);
-            } else {
-                if (leftCount < n) {
-                    sb.append('(');
-                    backtrack(n, leftCount + 1, rightCount, sb);
-                    sb.deleteCharAt(sb.length() - 1);
-                }
+            }
+            if (rightCount < leftCount) {
                 sb.append(')');
                 backtrack(n, leftCount, rightCount + 1, sb);
                 sb.deleteCharAt(sb.length() - 1);

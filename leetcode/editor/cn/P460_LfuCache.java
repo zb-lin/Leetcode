@@ -79,15 +79,20 @@ public class P460_LfuCache {
     }
     //leetcode submit region begin(Prohibit modification and deletion)
 
+    // 节点类，存储缓存项的信息
     class Node implements Comparable<Node> {
-        int count, time, key, value;
+        int count;    // 使用计数
+        int time;     // 最近使用时间
+        int key;      // 键
+        int value;    // 值
 
-
+        // 比较方法：先比较使用次数，次数相同再比较使用时间
         @Override
         public int compareTo(Node node) {
             return count == node.count ? time - node.time : count - node.count;
         }
 
+        // 构造函数
         public Node(int count, int time, int key, int value) {
             this.count = count;
             this.time = time;
@@ -96,47 +101,57 @@ public class P460_LfuCache {
         }
     }
 
+    // LFU缓存实现类
     class LFUCache {
-        int capacity;
-        int time;
-        Map<Integer, Node> cache;
-        TreeSet<Node> treeSet;
+        int capacity;           // 缓存容量
+        int time;               // 全局时间戳
+        Map<Integer, Node> cache;  // 哈希表存储键值对
+        TreeSet<Node> treeSet;     // 平衡二叉搜索树，用于快速找到LFU节点
 
+        // 构造函数
         public LFUCache(int capacity) {
-            cache = new HashMap<>();
-            treeSet = new TreeSet<>();
-            time = 0;
-            this.capacity = capacity;
+            cache = new HashMap<>();  // 初始化哈希表
+            treeSet = new TreeSet<>(); // 初始化平衡树
+            time = 0;                 // 初始化时间戳
+            this.capacity = capacity;  // 设置缓存容量
         }
 
+        // 获取键对应的值
         public int get(int key) {
             Node node = cache.get(key);
             if (node == null) {
-                return -1;
+                return -1;  // 键不存在返回-1
             }
-            treeSet.remove(node);
-            node.count++;
-            node.time = ++time;
-            treeSet.add(node);
-            return node.value;
+            // 更新节点信息
+            treeSet.remove(node);  // 先从树中移除
+            node.count++;         // 增加使用计数
+            node.time = ++time;    // 更新最近使用时间
+            treeSet.add(node);     // 重新加入树中
+            return node.value;     // 返回值
         }
 
+        // 插入或更新键值对
         public void put(int key, int value) {
             Node node = cache.get(key);
             if (node != null) {
-                treeSet.remove(node);
-                node.value = value;
-                node.count++;
-                node.time = ++time;
-                treeSet.add(node);
+                // 键已存在，更新值
+                treeSet.remove(node);  // 先从树中移除
+                node.value = value;    // 更新值
+                node.count++;         // 增加使用计数
+                node.time = ++time;    // 更新最近使用时间
+                treeSet.add(node);     // 重新加入树中
             } else {
+                // 键不存在，需要插入
                 if (cache.size() == capacity) {
-                    cache.remove(treeSet.first().key);
-                    treeSet.remove(treeSet.first());
+                    // 缓存已满，需要淘汰
+                    Node first = treeSet.first();  // 获取使用最少且最久未使用的节点
+                    cache.remove(first.key);       // 从哈希表中移除
+                    treeSet.remove(first);         // 从树中移除
                 }
-                node = new Node(1, ++time, key, value);
-                cache.put(key, node);
-                treeSet.add(node);
+                // 创建新节点并加入
+                node = new Node(1, ++time, key, value);  // 新节点初始计数为1
+                cache.put(key, node);  // 加入哈希表
+                treeSet.add(node);     // 加入树中
             }
         }
     }

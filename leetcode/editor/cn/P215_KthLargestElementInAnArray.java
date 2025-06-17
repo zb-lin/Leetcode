@@ -70,40 +70,29 @@ public class P215_KthLargestElementInAnArray {
          * @return 第k小的元素值
          */
         private int quickSelect(int[] nums, int left, int right, int k) {
-            // 当区间只有一个元素时，直接返回
-            if (left == right) return nums[left];
-
-            // 随机选择基准值(pivot)的位置，避免最坏情况
-            int pivotIndex = left + (int) (Math.random() * (right - left + 1));
+            if (left >= right) return nums[left];
+            int pivotIndex = (int) (Math.random() * (right - left + 1)) + left;
             int pivot = nums[pivotIndex];
-
-            // 将基准值交换到区间最左边
             swap(nums, left, pivotIndex);
+            int i = left + 1, lt = left, gt = right;
 
-            // i指向最后一个小于基准值的位置
-            int i = left;
-
-            // 分区操作：将所有小于基准值的元素移到左边
-            for (int j = left + 1; j <= right; ++j) {
-                if (pivot > nums[j]) {
-                    ++i;
-                    swap(nums, i, j);
+            // 三路分区：将数组分为 <pivot, ==pivot, >pivot 三部分
+            while (i <= gt) {
+                if (nums[i] < pivot) {
+                    swap(nums, i++, lt++);
+                } else if (nums[i] > pivot) {
+                    swap(nums, i, gt--);
+                } else  {
+                    i++;
                 }
             }
-
-            // 将基准值放到正确的位置i
-            swap(nums, left, i);
-
-            // 判断基准值位置与k的关系
-            if (k == i) {
-                // 基准值正好是第k小的元素
-                return nums[i];
-            } else if (k < i) {
-                // 第k小的元素在左半部分
-                return quickSelect(nums, left, i - 1, k);
+            // 根据k的位置决定递归处理哪一部分
+            if (k < lt) {
+                return quickSelect(nums, left, lt - 1, k);
+            } else if (k > gt) {
+                return quickSelect(nums, gt + 1, right, k);
             } else {
-                // 第k小的元素在右半部分
-                return quickSelect(nums, i + 1, right, k);
+                return nums[k]; // k在等于pivot的区间内，直接返回
             }
         }
 

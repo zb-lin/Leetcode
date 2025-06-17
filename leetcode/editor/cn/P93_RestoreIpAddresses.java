@@ -64,36 +64,41 @@ public class P93_RestoreIpAddresses {
 
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
-        List<String> res = new ArrayList<>();
-        List<String> track = new ArrayList<>();
+       List<String> res = new ArrayList<>();
         public List<String> restoreIpAddresses(String s) {
-            if (s.length() > 12 || s.length() < 4) return res;
-            backtrack(s, 0);
+            int len = s.length();
+            if (len < 4 || len > 12) return res;
+            backtrack(s, new LinkedList<>(), 0);
             return res;
         }
-        public void backtrack(String s, int index) {
-            if (index == s.length() && track.size() == 4) {
-                StringBuilder item = new StringBuilder();
-                for (int i = 0; i < 4; i++) {
-                    item.append(track.get(i)).append('.');
+
+        public void backtrack(String s, LinkedList<String> itemList, int index) {
+            if (itemList.size() == 4) {
+                if (index < s.length()) return;
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < 4; ++i) {
+                    sb.append(itemList.get(i)).append('.');
                 }
-                item.deleteCharAt(item.length() - 1);
-                res.add(item.toString());
+                sb.deleteCharAt(sb.length() - 1);
+                res.add(sb.toString());
                 return;
             }
-            for (int i = index; i < index + 3; ++i) {
-                if (i > s.length() - 1) return;
-                String str = s.substring(index, i + 1);
+            for (int j = index; j < s.length(); ++j) {
+                String str = s.substring(index, j + 1);
                 if (check(str)) {
-                    track.add(str);
-                    backtrack(s, i + 1);
-                    track.remove(track.size() - 1);
+                    itemList.addLast(str);
+                    backtrack(s, itemList, j + 1);
+                    itemList.removeLast();
                 }
             }
         }
+
         public boolean check(String str) {
-            if (str.equals("0")) return true;
-            return !(str.length() > 3 || str.startsWith("0") || Integer.parseInt(str) > 255);
+            int len = str.length();
+            if (len == 1) return true;
+            if (len == 2) return str.charAt(0) != '0';
+            if (len == 3) return str.charAt(0) != '0' && Integer.parseInt(str) <= 255;
+            return false;
         }
 
 

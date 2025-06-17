@@ -118,12 +118,12 @@ public class P160_IntersectionOfTwoLinkedLists {
      */
     public class Solution {
         public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
-            ListNode p1 = headA, p2 = headB;
-            while (p1 != p2) {
-                p1 = p1 == null ? headB : p1.next;
-                p2 = p2 == null ? headA : p2.next;
+            ListNode l1 = headA, l2 = headB;
+            while (l1 != l2) {
+                l1 = l1 != null ? l1.next : headB;
+                l2 = l2 != null ? l2.next : headA;
             }
-            return p1;
+            return l1;
         }
     }
 //leetcode submit region end(Prohibit modification and deletion)

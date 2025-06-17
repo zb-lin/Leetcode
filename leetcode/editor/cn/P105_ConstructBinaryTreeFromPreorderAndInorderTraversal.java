@@ -69,26 +69,26 @@ public class P105_ConstructBinaryTreeFromPreorderAndInorderTraversal {
      * }
      */
     class Solution {
-        Map<Integer, Integer> cache = new HashMap<>();
 
+        Map<Integer, Integer> record = new HashMap<>();
         public TreeNode buildTree(int[] preorder, int[] inorder) {
-            for (int i = 0; i < inorder.length; i++) {
-                cache.put(inorder[i], i);
+            for (int i = 0; i < inorder.length; ++i) {
+                record.put(inorder[i], i);
             }
-            return buildTree(preorder, inorder, 0, preorder.length, 0, inorder.length);
+            return buildTree(preorder, 0, preorder.length - 1, inorder, 0, inorder.length - 1);
         }
 
-        public TreeNode buildTree(int[] preorder, int[] inorder, int preLeft, int preRight, int inLeft, int inRight) {
-            if (preLeft >= preRight || inLeft >= inRight) return null;
-            int rootIndex = cache.get(preorder[preLeft]);
-            TreeNode node = new TreeNode(inorder[rootIndex]);
-            int leftOfIndex = rootIndex - inLeft;
-            node.left = buildTree(preorder, inorder,
-                    preLeft + 1, preLeft + leftOfIndex + 1, inLeft, rootIndex);
-            node.right = buildTree(preorder, inorder,
-                    preLeft + leftOfIndex + 1, preRight, rootIndex + 1, inRight);
-            return node;
+        public TreeNode buildTree(int[] preorder, int start1, int end1, int[] inorder, int start2, int end2) {
+            if (start1 > end1 || start2 > end2) return null;
+            TreeNode root = new TreeNode(preorder[start1]);
+            int rootIndex = record.get(root.val);
+            int leftLen = rootIndex - start2;
+            root.left = buildTree(preorder, start1 + 1, start1 + leftLen, inorder, start2, rootIndex - 1);
+            root.right = buildTree(preorder, start1 + leftLen + 1, end1, inorder, rootIndex + 1, end2);
+            return root;
         }
+
+
     }
 //leetcode submit region end(Prohibit modification and deletion)
 

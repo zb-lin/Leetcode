@@ -57,24 +57,28 @@ class Solution {
         if (left >= right) return;
         int pivotIndex = left + (int) (Math.random() * (right - left + 1));
         int pivot = nums[pivotIndex];
-        swap(nums, left, pivotIndex);
-        int i = left;
-        for (int j = left + 1; j <= right; ++j) {
-            if (pivot > nums[j]) {
-                swap(nums, ++i, j);
+        swap(nums, pivotIndex, left);
+        int lt = left, gt = right, i = left + 1;
+        while (i <= gt) {
+            if (nums[i] < pivot) {
+                swap(nums, i++, lt++);
+            } else if (nums[i] > pivot) {
+                swap(nums, i, gt--);
+            } else {
+                i++;
             }
         }
-        swap(nums, i, left);
-        quickSort(nums, left, i - 1);
-        quickSort(nums, i + 1, right);
+        quickSort(nums, left, lt - 1);
+        quickSort(nums, gt + 1, right);
     }
 
     public void swap(int[] nums, int i, int j) {
-        if (i == j) return;
         int temp = nums[i];
         nums[i] = nums[j];
         nums[j] = temp;
     }
+
+
 }
 //leetcode submit region end(Prohibit modification and deletion)
 

@@ -43,10 +43,6 @@
 
 package leetcode.editor.cn;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
  * 最长有效括号
  *
@@ -64,20 +60,28 @@ public class P32_LongestValidParentheses {
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
         public int longestValidParentheses(String s) {
-            int[] dp = new int[s.length()];
-            int maxLen = 0;
-            for (int i = 1; i < s.length(); ++i) {
-                if (s.charAt(i) == ')') {
+            int n = s.length(), max = 0;
+            int[] dp = new int[n];
+            for (int i = 0; i < n; i++) {
+                char ch = s.charAt(i);
+                if (ch == '(') continue;
+                if (i - 1 >= 0) {
                     if (s.charAt(i - 1) == '(') {
-                        dp[i] = (i - 2 >= 0 ? dp[i - 2] : 0) + 2;
-                    } else if (i - dp[i - 1] - 1 >= 0 && s.charAt(i - dp[i - 1] - 1) == '(' ) {
-                        dp[i] = dp[i - 1] + 2 +
-                                ((i - dp[i - 1] - 2) >= 0 ? dp[i - dp[i - 1] - 2] : 0);
+                        dp[i] = (i - 2 >= 0 && s.charAt(i - 2) == ')' ? dp[i - 2] : 0) + 2;
+                    } else {
+                        if (i - dp[i - 1] - 1 < 0) continue;
+                        if (s.charAt(i - dp[i - 1] - 1) == '(') {
+                            if (i - dp[i - 1] - 2 >= 0 && s.charAt(i - dp[i - 1] - 2) == ')') {
+                                dp[i] = dp[i - 1] + dp[i - dp[i - 1] - 2] + 2;
+                            } else {
+                                dp[i] = dp[i - 1] + 2;
+                            }
+                        }
                     }
                 }
-                maxLen = Math.max(maxLen, dp[i]);
+                max = Math.max(max, dp[i]);
             }
-            return maxLen;
+            return max;
         }
     }
 //leetcode submit region end(Prohibit modification and deletion)

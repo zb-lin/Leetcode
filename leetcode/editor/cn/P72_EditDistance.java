@@ -63,28 +63,41 @@ public class P72_EditDistance {
 
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
+        /**
+         * 计算两个单词之间的编辑距离
+         * @param word1 第一个单词
+         * @param word2 第二个单词
+         * @return 将word1转换为word2所需的最少操作次数
+         */
         public int minDistance(String word1, String word2) {
-            int m = word1.length(), n = word2.length();
-            int[][] dp = new int[n + 1][m + 1];
-            for (int i = 0; i <= n; ++i) {
-                dp[i][0] = i;
+            int len1 = word1.length(), len2 = word2.length();
+            int[][] dp = new int[len1 + 1][len2 + 1];
+
+            // 初始化边界条件：当其中一个字符串为空时
+            for (int i = 0; i <= len1; i++) {
+                dp[i][0] = i; // word1前i个字符转换为空串需要i次删除
             }
-            for (int j = 0; j <= m; j++) {
-                dp[0][j] = j;
+            for (int j = 0; j <= len2; j++) {
+                dp[0][j] = j; // 空串转换为word2前j个字符需要j次插入
             }
-            for (int i = 1; i <= n; ++i) {
-                for (int j = 1; j <= m; ++j) {
-                    if (word1.charAt(j - 1) == word2.charAt(i - 1)) {
+
+            for (int i = 1; i <= len1; i++) {
+                for (int j = 1; j <= len2; j++) {
+                    if (word1.charAt(i - 1) == word2.charAt(j - 1)) {
+                        // 字符相同，无需操作
                         dp[i][j] = dp[i - 1][j - 1];
                     } else {
-                        int up = dp[i - 1][j];
-                        int left = dp[i][j - 1];
-                        int leftUp = dp[i - 1][j - 1];
-                        dp[i][j] = 1 + Math.min(up, Math.min(leftUp, left));
+                        // 取三种操作中的最小值并加1（替换操作）
+                        dp[i][j] = Math.min(
+                                dp[i - 1][j - 1], // 替换
+                                Math.min(dp[i - 1][j], // 删除
+                                        dp[i][j - 1]  // 插入
+                                )
+                        ) + 1;
                     }
                 }
             }
-            return dp[n][m];
+            return dp[len1][len2];
         }
     }
 //leetcode submit region end(Prohibit modification and deletion)

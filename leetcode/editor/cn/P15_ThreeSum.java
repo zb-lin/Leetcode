@@ -71,17 +71,28 @@ public class P15_ThreeSum {
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
         public List<List<Integer>> threeSum(int[] nums) {
-            List<List<Integer>> res = new ArrayList<>();
+            // 预先分配足够容量，减少扩容开销
+            List<List<Integer>> res = new ArrayList<>(nums.length / 3);
             Arrays.sort(nums);
-            for (int i = 0; i < nums.length; i++) {
-                if (i != 0 && nums[i] == nums[i - 1]) continue;
+
+            for (int i = 0; i < nums.length - 2; i++) {
+                // 跳过重复的第一个数
+                if (i > 0 && nums[i] == nums[i - 1]) continue;
+
+                // 提前终止：第一个数大于0时不可能和为0
+                if (nums[i] > 0) break;
+
                 int left = i + 1, right = nums.length - 1;
                 while (left < right) {
                     int sum = nums[i] + nums[left] + nums[right];
+
                     if (sum == 0) {
-                        res.add(Arrays.asList(nums[i], nums[left++], nums[right--]));
-                        while (left < right && nums[left] == nums[left - 1]) left++;
-                        while (left < right && nums[right] == nums[right + 1]) right--;
+                        res.add(Arrays.asList(nums[i], nums[left], nums[right]));
+                        // 同时移动左右指针并跳过重复值
+                        while (left < right && nums[left] == nums[left + 1]) left++;
+                        while (left < right && nums[right] == nums[right - 1]) right--;
+                        left++;
+                        right--;
                     } else if (sum < 0) {
                         left++;
                     } else {

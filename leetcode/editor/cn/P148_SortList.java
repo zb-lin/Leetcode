@@ -73,33 +73,33 @@ public class P148_SortList {
             if (head == null || head.next == null) return head;
             ListNode dummy = new ListNode(-1, head);
             ListNode fast = dummy, slow = dummy;
-            while (fast != null && fast.next != null) {
+            while (fast.next != null && fast.next.next != null) {
                 fast = fast.next.next;
                 slow = slow.next;
             }
-            ListNode next = slow.next;
+            ListNode h2 = slow.next;
             slow.next = null;
-            ListNode left = sortList(head);
-            ListNode right = sortList(next);
-            return merge(left, right);
+            return merge(sortList(head), sortList(h2));
         }
 
-        public ListNode merge(ListNode l1, ListNode l2) {
+        public ListNode merge(ListNode h1, ListNode h2) {
             ListNode dummy = new ListNode(-1);
             ListNode curr = dummy;
-            while (l1 != null && l2 != null) {
-                if (l1.val < l2.val) {
-                    curr.next = l1;
-                    l1 = l1.next;
+            while (h1 != null && h2 != null) {
+                if (h1.val < h2.val) {
+                    curr.next = h1;
+                    h1 = h1.next;
                 } else {
-                    curr.next = l2;
-                    l2 = l2.next;
+                    curr.next = h2;
+                    h2 = h2.next;
                 }
                 curr = curr.next;
             }
-            curr.next = l1 != null ? l1 : l2;
+            curr.next = h1 != null ? h1 : h2;
             return dummy.next;
         }
+
+
     }
 //leetcode submit region end(Prohibit modification and deletion)
 

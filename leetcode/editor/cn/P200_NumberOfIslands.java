@@ -60,36 +60,33 @@ public class P200_NumberOfIslands {
 
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
+
         boolean[][] visited;
 
         public int numIslands(char[][] grid) {
-            int m = grid.length, n = grid[0].length;
-            visited = new boolean[m][n];
-            int res = 0;
-            for (int i = 0; i < m; ++i) {
-                for (int j = 0; j < n; ++j) {
-                    if (grid[i][j] == '1' && !visited[i][j]) {
-                        res++;
+            visited = new boolean[grid.length][grid[0].length];
+            int count = 0;
+            for (int i = 0; i < grid.length; ++i) {
+                for (int j = 0; j < grid[i].length; ++j) {
+                    if (!visited[i][j] && grid[i][j] == '1') {
                         dfs(grid, i, j);
+                        count++;
                     }
                 }
             }
-            return res;
+            return count;
         }
-
 
         public void dfs(char[][] grid, int i, int j) {
-            if (i < 0 || j < 0 || i > grid.length - 1 || j > grid[0].length - 1) {
-                return;
-            }
-            if (visited[i][j] || grid[i][j] == '0') return;
+            if (i < 0 || i >= grid.length || j < 0 || j >= grid[0].length) return;
+            if (visited[i][j]) return;
+            if (grid[i][j] == '0') return;
             visited[i][j] = true;
-            dfs(grid, i + 1, j);
             dfs(grid, i - 1, j);
-            dfs(grid, i, j + 1);
             dfs(grid, i, j - 1);
+            dfs(grid, i + 1, j);
+            dfs(grid, i, j + 1);
         }
-
 
     }
 //leetcode submit region end(Prohibit modification and deletion)

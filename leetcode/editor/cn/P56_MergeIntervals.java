@@ -52,30 +52,32 @@ public class P56_MergeIntervals {
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
         public int[][] merge(int[][] intervals) {
-            Arrays.sort(intervals, (a, b) -> {
-                return a[0] - b[0];
+            Arrays.sort(intervals, (arr1, arr2) -> {
+                return arr1[0] - arr2[0];
             });
-            Deque<int[]> resList = new LinkedList<>();
+            Deque<int[]> deque = new LinkedList<>();
             for (int i = 0; i < intervals.length; ++i) {
                 int[] curr = intervals[i];
-                if (resList.isEmpty()) {
-                    resList.addLast(curr);
+                if (deque.isEmpty()) {
+                    deque.addLast(curr);
                     continue;
                 }
-                int[] pre = resList.getLast();
-                if (pre[1] > curr[1]) continue;
-                if (pre[1] < curr[0]) {
-                    resList.addLast(curr);
+                int[] prev = deque.removeLast();
+                if (prev[1] < curr[0]) {
+                    deque.addLast(prev);
+                    deque.addLast(curr);
+                } else if (prev[1] >= curr[1]) {
+                    deque.addLast(prev);
                 } else {
-                    resList.removeLast();
-                    resList.addLast(new int[]{pre[0], curr[1]});
+                    deque.addLast(new int[] {prev[0], curr[1]});
                 }
             }
-            int[][] res = new int[resList.size()][2];
-            for (int i = 0; i < res.length; i++) {
-                res[i] = resList.removeFirst();
+            int size = deque.size();
+            int[][] result = new int[size][2];
+            for (int i = 0; i < size; ++i) {
+                result[i] = deque.removeFirst();
             }
-            return res;
+            return result;
         }
     }
 //leetcode submit region end(Prohibit modification and deletion)

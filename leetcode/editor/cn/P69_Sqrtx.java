@@ -49,33 +49,27 @@ public class P69_Sqrtx {
 
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
+        /**
+         * 使用二分查找计算平方根的整数部分
+         * @param x 非负整数
+         * @return x的平方根的整数部分
+         */
         public int mySqrt(int x) {
-            // 处理特殊情况
-            if (x == 0 || x == 1) {
-                return x;
-            }
-
-            // 初始化左右边界
-            long left = 1;
-            long right = x;
-            long result = 0;
-
-            // 二分查找
+            if (x == 0) return 0;
+            int left = 1, right = x;
             while (left <= right) {
-                long mid = left + (right - left) / 2;
-                long square = mid * mid;
-
-                if (square == x) {
-                    return (int) mid;  // 找到精确平方根
-                } else if (square < x) {
-                    left = mid + 1;
-                    result = mid;      // 记录当前最接近的较小值
-                } else {
+                int mid = left + (right - left) / 2;
+                // 使用除法避免mid*mid溢出
+                int sqrt = x / mid;
+                if (sqrt == mid) {
+                    return mid;
+                } else if (sqrt < mid) {
                     right = mid - 1;
+                } else {
+                    left = mid + 1;
                 }
             }
-
-            return (int) result;  // 返回整数部分
+            return right;
         }
     }
 //leetcode submit region end(Prohibit modification and deletion)

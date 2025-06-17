@@ -33,28 +33,44 @@
 // -2³¹ <= nums[i] <= 2³¹ - 1 
 // 
 //
-// Related Topics 数组 哈希表 👍 2368 👎 0
-
-
+// Related Topics 数组 哈希表 👍 2366 👎 0
 package leetcode.editor.cn;
 
 /**
+<<<<<<< HEAD
  * 缺失的第一个正数
  * @author lzb
  * @date 2025-06-16 15:50:44
  */
-public class P41_FirstMissingPositive{
-	 public static void main(String[] args) {
-	 	 Solution solution = new P41_FirstMissingPositive().new Solution();
-	 }
-	 
+public class P41_FirstMissingPositive {
+    public static void main(String[] args) {
+        Solution solution = new P41_FirstMissingPositive().new Solution();
+    }
 
-//leetcode submit region begin(Prohibit modification and deletion)
-class Solution {
-    public int firstMissingPositive(int[] nums) {
-        
+
+    //leetcode submit region begin(Prohibit modification and deletion)
+    class Solution {
+        public int firstMissingPositive(int[] nums) {
+            int n = nums.length;
+            for (int i = 0; i < n; ++i) {
+                while (nums[i] > 0 && nums[i] <= n && nums[nums[i] - 1] != nums[i]) {
+                    swap(nums, nums[i] - 1, i);
+                }
+            }
+            for (int i = 0; i < n; ++i) {
+                if (nums[i] != i + 1) {
+                    return i + 1;
+                }
+            }
+            return n + 1;
+        }
+
+        public void swap(int[] nums, int i, int j) {
+            int temp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = temp;
+        }
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
 
-}

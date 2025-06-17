@@ -51,44 +51,40 @@ public class P5_LongestPalindromicSubstring {
          * @return 最长回文子串
          */
         public String longestPalindrome(String s) {
-            // max数组存储当前找到的最长回文的起止索引
-            // max[0]是起始索引，max[1]是结束索引
-            int[] max = {0, 0};
+            int left = 0, right = 0, maxLen = 0;
+            for (int i = 0; i < s.length() - 1; ++i) {
+                int[] r1 = expand(s, i, i);
+                int[] r2 = expand(s, i, i + 1);
+                int len1 = r1[1] - r1[0] + 1;
+                int len2 = r2[1] - r2[0] + 1;
 
-            // 遍历字符串中的每个字符作为可能的回文中心
-            for (int i = 0; i < s.length(); i++) {
-                // 处理奇数长度的回文（中心为一个字符）
-                expand(s, i, i, max);
-                // 处理偶数长度的回文（中心为两个相同字符）
-                expand(s, i, i + 1, max);
+                if (len1 > len2) {
+                    if (maxLen < len1) {
+                        left = r1[0];
+                        right = r1[1];
+                        maxLen = right - left + 1;
+                    }
+                } else {
+                    if (maxLen < len2) {
+                        left = r2[0];
+                        right = r2[1];
+                        maxLen = right - left + 1;
+                    }
+                }
             }
-
-            // 根据记录的起止索引返回最长回文子串
-            return s.substring(max[0], max[1] + 1);
+            return s.substring(left, right + 1);
         }
 
-        /**
-         * 从中心向两边扩展寻找回文
-         * @param s 输入字符串
-         * @param l 中心左边界（包含）
-         * @param r 中心右边界（包含）
-         * @param max 记录最长回文起止索引的数组
-         */
-        private void expand(String s, int l, int r, int[] max) {
-            // 向两边扩展，直到字符不匹配或到达字符串边界
-            while (l >= 0 && r < s.length() && s.charAt(l) == s.charAt(r)) {
-                l--;
-                r++;
+        public int[] expand(String s, int i, int j) {
+            if (i != j && s.charAt(i) != s.charAt(j)) return new int[]{0, 0};
+            while (i >= 0 && j < s.length() && s.charAt(i) == s.charAt(j)) {
+                i--;
+                j++;
             }
-
-            // 计算当前回文长度（r-l-1）并与当前最大值比较
-            // 因为循环结束时l和r已经超出回文边界，所以实际长度是(r-1)-(l+1)+1 = r-l-1
-            if (r - l - 1 > max[1] - max[0] + 1) {
-                // 更新最长回文索引
-                max[0] = l + 1;  // 回文实际开始位置
-                max[1] = r - 1;  // 回文实际结束位置
-            }
+            return new int[]{++i, --j};
         }
+
+
     }
 //leetcode submit region end(Prohibit modification and deletion)
 

@@ -54,39 +54,20 @@ public class P162_FindPeakElement {
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
         public int findPeakElement(int[] nums) {
-            int left = 0, right = nums.length - 1, ans = -1;
-            while (left <= right) {
-                int mid = (left + right) / 2;
-                if (compare(nums, mid, mid - 1) > 0 && compare(nums, mid, mid + 1) > 0) {
-                    ans = mid;
-                    break;
-                }
-                if (compare(nums, mid, mid - 1) < 0) {
-                    right = mid - 1;
-                } else {
+            int left = 0, right = nums.length - 1;
+            while (left < right) {
+                int mid = ((right - left) >> 1) + left;
+                // // 比较中间元素和它右边的元素
+                if (nums[mid] < nums[mid + 1]) {
+                    // 如果右边更大，说明峰值在右侧
                     left = mid + 1;
+                } else {
+                    right = mid;
                 }
             }
-            return ans;
+            // 当left == right时，就是峰值位置
+            return left;
         }
-
-        public int[] get(int[] nums, int idx) {
-            if (idx < 0 || idx >= nums.length) {
-                return new int[]{0, 0};
-            }
-            return new int[]{1, nums[idx]};
-        }
-
-        public int compare(int[] nums, int idx1, int idx2) {
-            int[] nums1 = get(nums, idx1);
-            int[] nums2 = get(nums, idx2);
-            if (nums1[0] != nums2[0]) {
-                return nums1[0] > nums2[0] ? 1 : -1;
-            }
-            return nums1[1] > nums2[1] ? 1 : -1;
-        }
-
-
     }
 //leetcode submit region end(Prohibit modification and deletion)
 

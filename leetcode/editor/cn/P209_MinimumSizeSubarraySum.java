@@ -50,6 +50,8 @@
 
 package leetcode.editor.cn;
 
+import java.util.Arrays;
+
 /**
  * 长度最小的子数组
  *
@@ -68,45 +70,55 @@ public class P209_MinimumSizeSubarraySum {
     class Solution {
         public int minSubArrayLen(int target, int[] nums) {
             int n = nums.length;
-            int[] pre = new int[n + 1];
-            int minLen = n + 1;
-            for (int i = 1; i <= n; ++i) {
-                pre[i] = pre[i - 1] + nums[i - 1];
-            }
-            for (int j = 0; j < n; ++j) {
-                int i = binarySearch(pre, 0, j, pre[j + 1] - target);
-                if (i != -1) {
-                    minLen = Math.min(minLen, j - i + 1);
+            int left = 0, ans = 0, minLen = Integer.MAX_VALUE;
+            for (int right = 0; right < n; ++right) {
+                ans += nums[right];
+                while (left <= right && ans >= target) {
+                    minLen = Math.min(minLen, right - left + 1);
+                    ans -= nums[left++];
                 }
             }
-            return minLen == n + 1 ? 0 : minLen;
+            return minLen == Integer.MAX_VALUE ? 0 : minLen;
         }
 
-        public int binarySearch(int[] nums, int left, int right, int target) {
-            if (target < 0) return -1;
-            while (left < right) {
-                int mid = (left + right + 1) / 2;
-                if (nums[mid] <= target) {
-                    left = mid;
-                } else {
-                    right = mid - 1;
-                }
-            }
-            if (nums[left] > target) return -1;
-            return left;
-        }
-    /*    public int minSubArrayLen(int target, int[] nums) {
+        /**
+         * '
+         * 前缀和 + 二分查找
+         */
+        public int minSubArrayLen1(int targetSum, int[] nums) {
             int n = nums.length;
-            int sum = 0, left = 0, res = Integer.MAX_VALUE;
-            for (int right = 0; right < n; right++) {
-                sum += nums[right];
-                while (sum >= target) {
-                    res = Math.min(res, right - left + 1);
-                    sum -= nums[left++];
+            if (n == 0) {
+                return 0;
+            }
+
+            // 1. 计算前缀和数组
+            int[] prefixSum = new int[n + 1];
+            for (int i = 1; i <= n; i++) {
+                prefixSum[i] = prefixSum[i - 1] + nums[i - 1];
+            }
+
+            int minLength = Integer.MAX_VALUE;
+
+            // 2. 遍历每个起始点 i，寻找满足条件的子数组
+            for (int i = 0; i < n; i++) {
+                // 目标前缀和：prefixSum[j] >= prefixSum[i] + targetSum
+                int currentTarget = prefixSum[i] + targetSum;
+
+                // 二分查找：在 prefixSum 中找第一个 >= currentTarget 的位置
+                int j = Arrays.binarySearch(prefixSum, currentTarget);
+                if (j < 0) {
+                    j = -j - 1; // 如果没找到，返回插入点
+                }
+
+                // 如果找到合法的 j，更新最小长度
+                if (j <= n) {
+                    minLength = Math.min(minLength, j - i);
                 }
             }
-            return res == Integer.MAX_VALUE ? 0 : res;
-        }*/
+
+            return minLength == Integer.MAX_VALUE ? 0 : minLength;
+        }
+
     }
 //leetcode submit region end(Prohibit modification and deletion)
 

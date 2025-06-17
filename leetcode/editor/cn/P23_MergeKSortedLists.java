@@ -49,6 +49,7 @@
 package leetcode.editor.cn;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.PriorityQueue;
 
 /**
@@ -76,51 +77,32 @@ public class P23_MergeKSortedLists {
      * }
      */
     class Solution {
-//        public ListNode mergeKLists(ListNode[] lists) {
-//            if (lists.length == 0) return null;
-//            ListNode dummy = new ListNode(-1);
-//            ListNode p = dummy;
-//            PriorityQueue<ListNode> pq
-//                    = new PriorityQueue<>(lists.length, Comparator.comparingInt(a -> a.val));
-//            for (ListNode node : lists) {
-//                if (node != null) {
-//                    pq.add(node);
-//                }
-//            }
-//            while (!pq.isEmpty()) {
-//                ListNode node = pq.poll();
-//                p.next = node;
-//                p = p.next;
-//                if (node.next != null) {
-//                    pq.add(node.next);
-//                }
-//            }
-//            return dummy.next;
-//        }
         public ListNode mergeKLists(ListNode[] lists) {
-            return merge(lists, 0, lists.length - 1);
+            if (lists == null || lists.length == 0) return null;
+            return mergeList(lists, 0, lists.length - 1);
         }
-        public ListNode merge(ListNode[] lists, int l, int r) {
-            if (l == r) return lists[l];
-            if (l > r) return null;
-            int mid = l + (r - l) / 2;
-            return merge2Lists(merge(lists, l, mid), merge(lists, mid + 1, r));
+
+        public ListNode mergeList(ListNode[] lists, int left, int right) {
+            if (left == right) return lists[left];
+            int mid = ((right - left) >> 1) + left;
+            ListNode l1 = mergeList(lists, left, mid);
+            ListNode l2 = mergeList(lists, mid + 1, right);
+            return merge2List(l1, l2);
         }
-        public ListNode merge2Lists(ListNode p, ListNode q) {
-            if (p == null || q == null) return p == null ? q : p;
-            ListNode dummy = new ListNode(0);
-            ListNode pre = dummy;
-            while (p != null && q != null) {
-                if (p.val < q.val) {
-                    pre.next = p;
-                    p = p.next;
+        public ListNode merge2List(ListNode l1, ListNode l2) {
+            ListNode dummy = new ListNode(-1);
+            ListNode head = dummy;
+            while (l1 != null && l2 != null) {
+                if (l1.val < l2.val) {
+                    head.next = l1;
+                    l1 = l1.next;
                 } else {
-                    pre.next = q;
-                    q = q.next;
+                    head.next = l2;
+                    l2 = l2.next;
                 }
-                pre = pre.next;
+                head = head.next;
             }
-            pre.next = p != null ? p : q;
+            head.next = l1 != null ? l1 : l2;
             return dummy.next;
         }
 

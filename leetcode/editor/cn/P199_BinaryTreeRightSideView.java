@@ -40,10 +40,7 @@
 
 package leetcode.editor.cn;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * 二叉树的右视图
@@ -78,15 +75,17 @@ public class P199_BinaryTreeRightSideView {
         public List<Integer> rightSideView(TreeNode root) {
             List<Integer> res = new ArrayList<>();
             if (root == null) return res;
-            Queue<TreeNode> queue = new LinkedList<>();
-            queue.offer(root);
-            while (!queue.isEmpty()) {
-                int len = queue.size();
-                for (int i = 0; i < len; i++) {
-                    TreeNode node = queue.poll();
-                    if (node.left != null) queue.offer(node.left);
-                    if (node.right != null) queue.offer(node.right);
-                    if (i == len - 1) res.add(node.val);
+            Deque<TreeNode> deque = new LinkedList<>();
+            deque.addLast(root);
+            while (!deque.isEmpty()) {
+                int len = deque.size();
+                for (int i = 0; i < len; ++i) {
+                    TreeNode node = deque.removeFirst();
+                    if (i == len - 1) {
+                        res.add(node.val);
+                    }
+                    if (node.left != null) deque.addLast(node.left);
+                    if (node.right != null) deque.addLast(node.right);
                 }
             }
             return res;

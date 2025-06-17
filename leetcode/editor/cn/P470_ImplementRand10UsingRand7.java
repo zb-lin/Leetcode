@@ -75,19 +75,32 @@ public class P470_ImplementRand10UsingRand7 {
     class Solution /*extends SolBase*/ {
         public int rand10() {
             while (true) {
-                int row = rand7();
-                int col = rand7();
+                // 1. 使用rand7()生成两个独立的随机数，模拟二维坐标 (row, col)
+                int row = rand7();  // 行号，范围1-7
+                int col = rand7();  // 列号，范围1-7
+
+                // 2. 计算二维坐标对应的线性索引 (1~49的均匀分布)
+                //    (row-1)*7 将行号转换为基地址，col作为偏移量
+                //    例如: row=2, col=3 → idx = 3 + (2-1)*7 = 10
                 int idx = col + (row - 1) * 7;
+
+                // 3. 拒绝采样：只接受1~40的索引（保证均匀分布）
+                //    因为40是10的整数倍，可以均匀映射到1~10
                 if (idx <= 40) {
+                    // 4. 将1~40的索引转换为1~10的随机数
+                    //    (idx-1) % 10 → 0~9
+                    //    +1 → 1~10
                     return (idx - 1) % 10 + 1;
                 }
+
+                // 5. 如果idx > 40，拒绝并重新生成（保证概率均等）
             }
         }
 
-        private int rand7() {
-            return 1;
-        }
     }
 //leetcode submit region end(Prohibit modification and deletion)
+    private int rand7() {
+    return 1;
+}
 
 }

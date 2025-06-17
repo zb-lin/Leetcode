@@ -69,14 +69,12 @@ public class P98_ValidateBinarySearchTree {
      * }
      */
     class Solution {
-        TreeNode max = null;
-
+        long max = Long.MIN_VALUE;
         public boolean isValidBST(TreeNode root) {
             if (root == null) return true;
-            if (!isValidBST(root.left) || (max != null && root.val <= max.val)) {
-                return false;
-            }
-            max = root;
+            if (!isValidBST(root.left)) return false;
+            if (max >= root.val) return false;
+            max = root.val;
             return isValidBST(root.right);
         }
     }

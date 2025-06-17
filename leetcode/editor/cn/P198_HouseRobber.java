@@ -56,37 +56,38 @@ public class P198_HouseRobber {
     class Solution {
         public int rob(int[] nums) {
             int n = nums.length;
+            // 边界情况：如果只有一间房屋，直接返回该房屋的金额
             if (n == 1) return nums[0];
+
+            // dp[i][0] 表示偷第i间房屋时的最大金额
+            // dp[i][1] 表示不偷第i间房屋时的最大金额
             int[][] dp = new int[n][2];
-            dp[0][0] = nums[0];
-            dp[1][0] = nums[1];
-            dp[1][1] = nums[0];
+
+            // 初始化前两间房屋的状态
+            dp[0][0] = nums[0]; // 偷第0间
+            dp[0][1] = 0;       // 不偷第0间
+            dp[1][0] = nums[1]; // 偷第1间（不能偷第0间）
+            dp[1][1] = nums[0]; // 不偷第1间（可以偷第0间）
+
+            // 记录当前最大值（前两间房屋的较大值）
             int max = Math.max(nums[0], nums[1]);
+
+            // 从第2间房屋开始动态规划
             for (int i = 2; i < n; ++i) {
+                // 偷第i间房屋的情况：
+                // 可以从i-2偷或不偷的状态转移过来（因为不能偷i-1）
                 dp[i][0] = Math.max(dp[i - 1][1], dp[i - 2][1]) + nums[i];
+
+                // 不偷第i间房屋的情况：
+                // 直接继承i-1偷的状态（因为不偷i，i-1可以偷）
                 dp[i][1] = dp[i - 1][0];
-                max = Math.max(dp[i][0], dp[i][1]);
+
+                // 更新最大值
+                max = Math.max(max, Math.max(dp[i][0], dp[i][1]));
             }
+
             return max;
         }
-
-        /*public int rob(int[] nums) {
-            if (nums.length == 1) return nums[0];
-            int max = Math.max(nums[0], nums[1]);
-            if (nums.length == 2) return max;
-            max = Math.max(nums[0] + nums[2], nums[1]);
-            if (nums.length == 3) return max;
-
-            int[] dp = new int[nums.length];
-            dp[0] = nums[0];
-            dp[1] = nums[1];
-            dp[2] = nums[0] + nums[2];
-            for (int i = 3; i < nums.length; ++i) {
-                dp[i] = Math.max(nums[i] + dp[i - 2], nums[i] + dp[i - 3]);
-                max = Math.max(dp[i], max);
-            }
-            return max;
-        }*/
     }
 //leetcode submit region end(Prohibit modification and deletion)
 

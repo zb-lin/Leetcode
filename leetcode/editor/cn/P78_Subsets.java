@@ -63,7 +63,7 @@ public class P78_Subsets {
         public void backtrack(int[] nums, int startIndex) {
             res.add(new ArrayList<>(track));
             for (int i = startIndex; i < nums.length; i++) {
-                track.add(nums[i]);
+                track.addLast(nums[i]);
                 backtrack(nums, i + 1);
                 track.removeLast();
             }

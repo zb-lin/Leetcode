@@ -55,17 +55,17 @@ package leetcode.editor.cn;
  */
 class Solution {
     public ListNode deleteDuplicates(ListNode head) {
-        ListNode dummy = new ListNode(101, head);
-        ListNode pre = dummy;
-        while (pre.next != null && pre.next.next != null) {
-            if (pre.next.val != pre.next.next.val) {
-                pre = pre.next;
-            } else {
-                ListNode next = pre.next;
-                while (next != null && next.val == pre.next.val) {
-                    next = next.next;
+        ListNode dummy = new ListNode(-101, head);
+        ListNode curr = dummy;
+        while (curr.next != null && curr.next.next != null) {
+            if (curr.next.val == curr.next.next.val) {
+                ListNode tail = curr.next.next;
+                while (tail != null && tail.val == curr.next.val) {
+                    tail = tail.next;
                 }
-                pre.next = next;
+                curr.next = tail;
+            } else {
+                curr = curr.next;
             }
         }
         return dummy.next;

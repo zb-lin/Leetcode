@@ -79,27 +79,27 @@ public class P113_PathSumIi {
      */
     class Solution {
         List<List<Integer>> res = new LinkedList<>();
-        List<Integer> track = new LinkedList<>();
 
         public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
-            hasPathSum(root, targetSum, 0);
+            if (root == null) return res;
+            hasPathSum(root, targetSum, 0, new LinkedList<>());
             return res;
         }
 
-        public void hasPathSum(TreeNode root, int targetSum, int sum) {
-            if (root == null) return;
+        public void hasPathSum(TreeNode root, int targetSum, int sum, LinkedList<Integer> track) {
             sum += root.val;
-            track.add(root.val);
+            track.addLast(root.val);
             if (root.left == null && root.right == null) {
                 if (targetSum == sum) {
                     res.add(new ArrayList<>(track));
                 }
-                track.remove(track.size() - 1);
+                track.removeLast();
                 return;
             }
-            hasPathSum(root.left, targetSum, sum);
-            hasPathSum(root.right, targetSum, sum);
-            track.remove(track.size() - 1);
+
+            if (root.left != null) hasPathSum(root.left, targetSum, sum, track);
+            if (root.right != null) hasPathSum(root.right, targetSum, sum, track);
+            track.removeLast();
         }
 
     }

@@ -71,19 +71,7 @@ public class P88_MergeSortedArray {
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
         public void merge(int[] nums1, int m, int[] nums2, int n) {
-            int right = nums1.length - 1, index1 = m - 1, index2 = n - 1;
-            while (index1 >= 0 || index2 >= 0) {
-                int num1 = index1 >= 0 ? nums1[index1] : Integer.MIN_VALUE;
-                int num2 = index2 >= 0 ? nums2[index2] : Integer.MIN_VALUE;
-                if (num1 > num2) {
-                    nums1[right] = num1;
-                    index1--;
-                } else {
-                    nums1[right] = num2;
-                    index2--;
-                }
-                right--;
-            }
+            
         }
     }
 //leetcode submit region end(Prohibit modification and deletion)

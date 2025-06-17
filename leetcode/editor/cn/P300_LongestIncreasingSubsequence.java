@@ -47,6 +47,11 @@
 
 package leetcode.editor.cn;
 
+import java.util.Arrays;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * 最长递增子序列
  *
@@ -62,32 +67,18 @@ public class P300_LongestIncreasingSubsequence {
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
         public int lengthOfLIS(int[] nums) {
-            // tails数组：tails[i]表示长度为i+1的递增子序列的最小末尾元素
-            int[] tails = new int[nums.length];
-            int size = 0;
-            for (int num : nums) {
-                int left = 0, right = size;
-                // 找到第一个大于等于num的元素位置
-                while (left < right) {
-                    int mid = left + (right - left) / 2;
-                    if (tails[mid] < num) {
-                        left = mid + 1;
-                    } else {
-                        right = mid;
+            int[] dp = new int[nums.length];
+            Arrays.fill(dp, 1);
+            int maxLen = 1;
+            for (int i = 1; i < nums.length; ++i) {
+                for (int j = 0; j < i; ++j) {
+                    if (nums[j] < nums[i]) {
+                        dp[i] = Math.max(dp[j] + 1, dp[i]);
                     }
                 }
-//                假设当前tails = [2,5,7]，size=3：
-//                遇到数字3：
-//                通过二分查找确定应该替换tails[1]=5
-//                更新后tails = [2,3,7]（优化了长度为2的子序列末尾）
-//                遇到数字8：
-//                可以扩展size，得到tails = [2,3,7,8]
-                tails[left] = num;
-                if (left == size) {
-                    size++;
-                }
+                maxLen = Math.max(maxLen, dp[i]);
             }
-            return size;
+            return maxLen;
         }
     }
 //leetcode submit region end(Prohibit modification and deletion)
